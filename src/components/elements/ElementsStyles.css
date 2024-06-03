@@ -1,0 +1,21 @@
+.text-input {
+    width: 100%;
+    background-color: #001136;
+    border: 1px solid rgb(206, 206, 206);
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 14px;
+    color: white;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+  
+.text-input::placeholder {
+    color: #6A6A6A;
+  }
+
+.text-input:focus{
+    border-color: white;
+    transition: all 0.3s ease;
+    outline: none;
+}
