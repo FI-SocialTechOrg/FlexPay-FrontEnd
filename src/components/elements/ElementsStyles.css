@@ -1,13 +1,14 @@
 .text-input {
-    width: 100%;
+    width: stretch;
     background-color: #001136;
     border: 1px solid rgb(206, 206, 206);
     border-radius: 4px;
-    padding: 8px;
+    padding: 20px 15px;
     font-size: 14px;
     color: white;
     transition: all 0.3s ease;
     outline: none;
+    font-size: larger;
   }
   
 .text-input::placeholder {
