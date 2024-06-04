@@ -1,58 +1,54 @@
-import {TextInput, Button} from "../../elements/Elements";
-import loginPicture from '../../assets/login_picture.png';
-import logo from '../../assets/flexpay_logo.png';
-import './LogIn.css'
-function LogIn() {
+import {TextInput, Button, CustomLink} from "../../elements/Elements";
+import '../../styles/Form.css'
+import { motion } from "framer-motion";
 
+
+function LogIn() {
     const isSmallScreen = window.innerWidth < 800;
     
     return (
-        <div className = "login-container">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0}}
+        >
+                    <form className = "form">
+                        <div className = "title-container">
+                            <h1 className = "form-title">
+                                Inicia Sesión
+                            </h1>
+                            <div className="register-redirect">
+                            <p>¿No tienes una cuenta?</p>
+                            <CustomLink text = {'Regístrate'} href = {'/auth/register/1'}/>
+                            </div>
+                        </div>
 
-            <div className = "left-container">
-                <img className="logo" src={logo} alt="logo"/>
-                <img className="login-picture" src={loginPicture} alt=""/>
-            </div>
+                        <div className = "form-group-login">
+                            <p className = "textinput-title">
+                                Usuario
+                            </p>
+                            <TextInput
+                                type = {'text'}
+                                placeholder = {'Ingrese su usuario'}
+                            />
+                        </div>
+                        <div className = "form-group-login">
+                            <p className = "textinput-title">
+                                Contraseña
+                            </p>
+                            <TextInput
+                                type = {'password'}
+                                placeholder = {'Ingrese su contraseña'}
+                            />
+                        </div>
+                        {isSmallScreen 
+                        ? <Button text = {'Iniciar Sesión'} alignment = {'center'}/>
+                        : <Button text = {'Iniciar Sesión'} alignment = {'start'}/>
+                        }
+                    </form>
 
-            <div className = "right-container">
-
-                <form className = "login-form">
-                    <div className = "title-container">
-                        <h1 className = "login-title">
-                            Inicia Sesión
-                        </h1>
-                        <div className="register-redirect">
-                        <p>¿No tienes una cuenta?</p>
-                        <a className="link" href="/">Registrate</a>
-                    </div>
-                    </div>
-
-                    <div className = "login-group">
-                        <p className = "textinput-title">
-                            Usuario
-                        </p>
-                        <TextInput
-                            type = {'text'}
-                            placeholder = {'Ingrese su usuario'}
-                        />
-                    </div>
-                    <div className = "login-group">
-                        <p className = "textinput-title">
-                            Contraseña
-                        </p>
-                        <TextInput
-                            type = {'text'}
-                            placeholder = {'Ingrese su contraseña'}
-                        />
-                    </div>
-                    {isSmallScreen 
-                    ? <Button text = {'Iniciar Sesión'} alignment = {'center'}/>
-                    : <Button text = {'Iniciar Sesión'} alignment = {'start'}/>
-                    }
-                </form>
-                
-            </div>
-        </div>
+        </motion.div>
     )
 }
 

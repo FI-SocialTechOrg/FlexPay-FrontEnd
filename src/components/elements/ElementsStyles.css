@@ -1,14 +1,14 @@
 .text-input {
-    width: stretch;
+    width: 100%;
     background-color: #001136;
     border: 1px solid #6a758b;
     border-radius: 4px;
-    padding: 20px 15px;
+    padding: 15px 11px;
     font-size: 14px;
     color: white;
     transition: all 0.3s ease;
     outline: none;
-    font-size: larger;
+    font-size: medium;
   }
   
 .text-input::placeholder {
@@ -32,6 +32,24 @@
     transition: all 0.3s ease;
 }
 
+.radio-button{
+  color: white;
+  font-size: medium;
+  border: 1px solid #6a758b;  
+  border-radius: 4px;
+  padding: 11px 11px;
+  flex: 1;
+}
+
+.link{
+  color: #1983FF;
+  font-size: medium;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 20px;
+  align-self: center;
+}
+
 @media screen and (max-width: 800px){
     .text-input{
       padding: 15px 10px;
@@ -41,5 +59,9 @@
     .colored-button{
       padding: 10px 10px;
       font-size: small;
+    }
+
+    .link{
+      font-size: 18px;
     }
 }
