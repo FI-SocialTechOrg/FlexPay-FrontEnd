@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
-import Auth from './components/views/Auth';
-
+import Auth from './components/views/authentication/Auth';
 import { AnimatePresence } from "framer-motion";
 
 function App() {

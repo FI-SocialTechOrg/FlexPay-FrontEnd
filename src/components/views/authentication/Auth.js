@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import loginPicture from '../assets/login_picture.png';
-import logo from '../assets/flexpay_logo.png';
-import '../styles/Form.css'
-import LogIn from './LogIn/LogIn'
-import Register1 from './Register/Register1';
-import Register2 from './Register/Register2';
+import loginPicture from '../../assets/login_picture.png';
+import logo from '../../assets/flexpay_logo.png';
+import '../../styles/Form.css'
+import LogIn from './LogIn'
+import Register1 from './Register1';
+import Register2 from './Register2';
 
 function Auth() {
     
