@@ -16,6 +16,7 @@ function Auth() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, delay: 0}}
+            style={{display: 'flex', width: '100vw', height: '100vh',}}
         >
             <div className = "form-container">
 

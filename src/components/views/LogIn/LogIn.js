@@ -12,6 +12,7 @@ function LogIn() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, delay: 0}}
+            style={{display: 'flex', width: '100%'}}
         >
                     <form className = "form">
                         <div className = "title-container">
