@@ -23,25 +23,25 @@ function Register1() {
                     <div className="form-group-register">
                         <TextInput
                             type="text"
-                            placeholder="Correo electrónico"
+                            placeholder="Nombre"
                         />
                     </div>
                     <div className="form-group-register">
                         <TextInput
                             type="text"
-                            placeholder="Usuario"
+                            placeholder="Apellido"
                         />
                     </div>
                     <div className="form-group-register">
                         <TextInput
-                            type="password"
-                            placeholder="Contraseña"
+                            type="text"
+                            placeholder="DNI"
                         />
                     </div>
                     <div className="form-group-register">
                         <TextInput
-                            type="password"
-                            placeholder="Repetir contraseña"
+                            type="text"
+                            placeholder="Celular"
                         />
                     </div>
                 </>

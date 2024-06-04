@@ -38,13 +38,13 @@ function Register2() {
                         </div>
                         <div className = "form-group-register">
                             <TextInput
-                                type = {'text'}
+                                type = {'password'}
                                 placeholder = {'Contraseña'}
                             />
                         </div>
                         <div className = "form-group-register">
                             <TextInput
-                                type = {'text'}
+                                type = {'password'}
                                 placeholder = {'Repetir contraseña'}
                             />
                         </div>
