@@ -1,14 +1,30 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import logo from '../../assets/flexpay_logo.png';
 import calendar from '../../assets/calendar.png';
 import '../../styles/Form.css'
-import { Button } from '../../elements/Elements';
+import { Button, DropDownLight } from '../../elements/Elements';
 
 function Auth() {
     var name = "Carlos";
     var line = "1000.00";
 
+    const generateOptions = (start, end) => {
+        const options = [];
+        for (let i = start; i <= end; i++) {
+          options.push({ value: i, text: i });
+        }
+        return options;
+    };
+
+    const options = generateOptions(1, 28);
+    const [selectedOption, setSelectedOption] = useState('');
+
+    const handleChange = (event) => {
+        setSelectedOption(event.target.value);
+    };
+    
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -34,13 +50,16 @@ function Auth() {
                 </div>
 
                 <div className = "welcome-right-container">
-                    <img className='calendar' src={calendar} alt='calendar'></img>
-                    <h1 className='pay-title'>Fecha de pago</h1>
-                    <div className='pay-text'>
-                        <p>Configura tu fecha depago mensual.</p>
-                        <p>Recuerda que no podrás modificarla más adelante.</p>
+                    <div className='welcome-sub-container'>
+                        <img className='calendar' src={calendar} alt='calendar'></img>
+                        <h1 className='pay-title'>Fecha de pago</h1>
+                        <div className='pay-text'>
+                            <p>Configura tu fecha de pago mensual.</p>
+                            <p>Recuerda que no podrás modificarla más adelante.</p>
+                        </div>
+                        <DropDownLight options={options} onChange={handleChange} />
+                        <Button text={'Confirmar'} alignment={'center'}/>
                     </div>
-                    <Button text={'Confirmar'} alignment={'center'}/>
                 </div>
             </div>
         </motion.div>

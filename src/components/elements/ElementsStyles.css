@@ -50,6 +50,34 @@
   align-self: center;
 }
 
+.dropdown-light{
+  background-color: white;
+  color: #001136;
+  border: 1px solid #001136;
+  border-radius: 4px;
+  padding: 11px 11px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  outline: none;
+  font-size: medium;
+  width: 50%;
+}
+
+.options-button{
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-radius: none;
+  font-size: small;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 5px;
+}
+
+.options-icon {
+  margin-left: 5px; 
+}
+
 @media screen and (max-width: 800px){
     .text-input{
       padding: 15px 10px;

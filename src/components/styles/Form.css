@@ -146,6 +146,15 @@
     justify-content: center;
 }
 
+.welcome-sub-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    margin: auto;
+}
+
 .welcome-data{
     display: flex;
     flex-direction: column;
@@ -191,21 +200,22 @@
     max-width: 100px;
     min-width: 80px;
     height: auto;
-    margin: 20px auto 20px;
+    margin: 0;
+    padding: 0;
 }
 
 .pay-title{
     color: #001136;
     font-size: 2em;
-    margin: 20px auto 20px;
-
+    margin: 0;
+    padding: 0;
 }
 
 .pay-text{
     color: black;
     font-size: medium;
     font-weight: lighter;
-    margin: 10px auto 30px;
+    margin: 0;
     padding: 0;
     text-align: center;
 }
@@ -269,8 +279,17 @@
         margin: 30px auto;
     }
 
+    .welcome-sub-container{
+        margin: 30px 30px 50px ;
+    }
+
     .welcome-data{
         margin: 20px 20px 50px ;
+        text-align: center;
+    }
+
+    .welcome-title{
+        justify-content: center;
     }
 
     .welcome-h1{

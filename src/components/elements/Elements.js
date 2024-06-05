@@ -1,5 +1,7 @@
 import './ElementsStyles.css'
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'; 
 
 function TextInput({ type, placeholder }) {
   return (
@@ -37,7 +39,6 @@ function RadioButton({ text, name, value, onChange }) {
 
 function CustomLink({ text, href, alignment }) {
   return (
-    
     <Link className="link" 
       to = {href}
       style={{alignSelf: alignment}}
@@ -46,4 +47,26 @@ function CustomLink({ text, href, alignment }) {
   );
 }
 
-export { TextInput, Button, RadioButton, CustomLink };
+function CustomOptions({ text }) {
+  return (
+    <button className="options-button"> 
+      {text} 
+      <FontAwesomeIcon icon={faChevronDown} className="options-icon" /> 
+    </button>
+  );
+}
+
+
+function DropDownLight({ options, onChange }) {
+  return (
+    <select className="dropdown-light" onChange={onChange}>
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.text}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+export { TextInput, Button, CustomOptions, RadioButton, CustomLink, DropDownLight};
