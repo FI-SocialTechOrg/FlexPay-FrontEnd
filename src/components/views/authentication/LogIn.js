@@ -12,7 +12,7 @@ function LogIn() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, delay: 0}}
-            style={{display: 'flex', width: '100%'}}
+            style={{display: 'flex', width: '100%', alignSelf: 'flex-start', top: '0'}}
         >
                     <form className = "form">
                         <div className = "title-container">
@@ -25,24 +25,30 @@ function LogIn() {
                             </div>
                         </div>
 
-                        <div className = "form-group-login">
+                        <div className="column">
                             <p className = "textinput-title">
                                 Usuario
                             </p>
-                            <TextInput
-                                type = {'text'}
-                                placeholder = {'Ingrese su usuario'}
-                            />
+                            <div className = "form-group-login">
+                                <TextInput
+                                    type = {'text'}
+                                    placeholder = {'Ingrese su usuario'}
+                                />
+                            </div>
                         </div>
-                        <div className = "form-group-login">
+
+                        <div className="column">
                             <p className = "textinput-title">
                                 Contraseña
                             </p>
-                            <TextInput
-                                type = {'password'}
-                                placeholder = {'Ingrese su contraseña'}
-                            />
+                            <div className = "form-group-login">
+                                <TextInput
+                                    type = {'password'}
+                                    placeholder = {'Ingrese su contraseña'}
+                                />
+                            </div>
                         </div>
+
                         {isSmallScreen 
                         ? <Button text = {'Iniciar Sesión'} alignment = {'center'}/>
                         : <Button text = {'Iniciar Sesión'} alignment = {'start'}/>
