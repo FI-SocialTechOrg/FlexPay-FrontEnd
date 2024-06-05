@@ -19,6 +19,7 @@ function Auth() {
     };
 
     const options = generateOptions(1, 28);
+    // eslint-disable-next-line no-unused-vars
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleChange = (event) => {
