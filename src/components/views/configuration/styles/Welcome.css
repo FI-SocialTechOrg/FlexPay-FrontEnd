@@ -1,0 +1,122 @@
+/*Welcome*/
+
+.welcome-left-container{
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    background-color: #001136;
+}
+
+.welcome-right-container{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: white;
+    justify-content: center;
+}
+
+.welcome-sub-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    margin: auto;
+}
+
+.welcome-data{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    justify-self: center;
+    gap: 25px;
+    margin: auto;
+}
+
+.welcome-title{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 10px;
+}
+
+.welcome-h1{
+    color: white;
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+}
+
+.welcome-name{
+    color: #1983FF;
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+}
+
+.calendar{
+    width: 15%;
+    max-width: 100px;
+    min-width: 80px;
+    height: auto;
+    margin: 0;
+    padding: 0;
+}
+
+.pay-title{
+    color: #001136;
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+}
+
+.pay-text{
+    color: black;
+    font-size: medium;
+    font-weight: lighter;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.pay-text p{
+    margin: 0;
+    padding: 0;
+}
+
+@media screen and (max-width: 800px){
+   
+    .welcome-left-container{
+        width: 100%;
+        height: max-content;
+    }
+
+    .welcome-left-container .logo{
+        position: inherit;
+        margin: 30px auto;
+    }
+
+    .welcome-sub-container{
+        margin: 30px 30px 50px ;
+    }
+
+    .welcome-data{
+        margin: 20px 20px 50px ;
+        text-align: center;
+    }
+
+    .welcome-title{
+        justify-content: center;
+    }
+
+    .welcome-h1{
+        font-size: 1.5em;
+    }
+
+    .welcome-name{
+        font-size: 1.5em;
+    }
+
+}

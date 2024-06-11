@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import './styles/Form.css'
 import {TextInput, RadioButton, CustomLink} from "../../elements/Elements";
-import '../../styles/Form.css'
 import { motion } from "framer-motion";
 
 function Register1() {

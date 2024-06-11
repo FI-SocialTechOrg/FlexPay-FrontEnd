@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import logo from '../assets/flexpay_logo.png';
-import '../elements/Navbar.css'
+import './styles/Navbar.css'
 import { CustomOptions } from "../elements/Elements";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faBars } from '@fortawesome/free-solid-svg-icons'; // Icono de carrito de compras
+import { Link } from 'react-router-dom';
 
 function Navbar() {
     var name = 'Carlos';
@@ -40,7 +41,7 @@ function Navbar() {
                     <CustomOptions text = {"Cuenta"} />
                     <div className="account-dropdown-content">
                         <a href="/">Configuración</a>
-                        <a href="auth/login">Cerrar sesión</a>
+                        <Link to="/auth/login">Cerrar sesión</Link>
                     </div>
                 </div>
                 <button className="shopping-cart-button rounded-border">
@@ -56,7 +57,7 @@ function Navbar() {
                     <ul>
                         <li><a href="/">Carrito de compras</a></li>
                         <li><a href="/">Configuración</a></li>
-                        <li><a href="auth/login">Cerrar sesión</a></li>
+                        <li><Link to="/auth/login">Cerrar sesión</Link></li>
                     </ul>
                 </div>
             )}

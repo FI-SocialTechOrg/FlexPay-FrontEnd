@@ -1,7 +1,8 @@
-import './ElementsStyles.css'
+import './styles/ElementsStyles.css'
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'; 
+import '../assets/store_icon.png'; 
 
 function TextInput({ type, placeholder }) {
   return (
@@ -20,6 +21,32 @@ function Button({ text, alignment}) {
     type="submit"
     style={{alignSelf: alignment}}
     > {text} </button>);
+}
+
+function RedirectButton({ text, href }) {
+  return (
+    <Link 
+      className="colored-button" 
+      to={href}
+    > 
+      {text} 
+    </Link>
+  );
+}
+
+function StoreButton({ id, name, logo, ruc }) {
+  const defaultLogo = require('../assets/store_icon.png'); 
+
+  return (
+    <div className="store-card">
+      <img src={logo || defaultLogo} alt={`${name} logo`} className="store-logo" />
+      <div className='store-info'>
+        <h3>{name}</h3>
+        <p>RUC: {ruc}</p>
+        <RedirectButton text="Ver tienda" href={`${id}`} />
+      </div>
+    </div>
+  );
 }
 
 function RadioButton({ text, name, value, onChange }) {
@@ -69,4 +96,13 @@ function DropDownLight({ options, onChange }) {
   );
 }
 
-export { TextInput, Button, CustomOptions, RadioButton, CustomLink, DropDownLight};
+export { 
+  TextInput, 
+  Button, 
+  RedirectButton, 
+  StoreButton, 
+  CustomOptions, 
+  RadioButton, 
+  CustomLink, 
+  DropDownLight
+};

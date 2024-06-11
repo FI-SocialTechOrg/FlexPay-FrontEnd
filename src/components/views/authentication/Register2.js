@@ -1,6 +1,6 @@
-import {TextInput, Button, CustomLink} from "../../elements/Elements";
-import '../../styles/Form.css'
+import './styles/Form.css'
 import { motion } from "framer-motion";
+import {TextInput, Button, CustomLink} from "../../elements/Elements";
 
 function Register2() {
     

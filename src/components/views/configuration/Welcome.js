@@ -1,14 +1,13 @@
 import React from 'react';
+import './styles/Welcome.css'
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import logo from '../../assets/flexpay_logo.png';
 import calendar from '../../assets/calendar.png';
-import '../../styles/Form.css'
-import { Button, DropDownLight } from '../../elements/Elements';
+import { RedirectButton, DropDownLight } from '../../elements/Elements';
 
 function Auth() {
     var name = "Carlos";
-    var line = "1000.00";
 
     const generateOptions = (start, end) => {
         const options = [];
@@ -24,6 +23,7 @@ function Auth() {
 
     const handleChange = (event) => {
         setSelectedOption(event.target.value);
+        console.log("Fecha seleccionada: " + event.target.value);
     };
     
     return (
@@ -43,10 +43,6 @@ function Auth() {
                             <p className='welcome-h1'>Bienvenido,</p> 
                             <p className='welcome-name'>{name}</p>     
                         </div>    
-                        <div className='welcome-description'>
-                            <p className='welcome-text'>Cuentas con una línea de crédito de</p>
-                            <p className='welcome-h1'>S/ {line}</p>
-                        </div>
                     </div>
                 </div>
 
@@ -59,7 +55,7 @@ function Auth() {
                             <p>Recuerda que no podrás modificarla más adelante.</p>
                         </div>
                         <DropDownLight options={options} onChange={handleChange} />
-                        <Button text={'Confirmar'} alignment={'center'}/>
+                        <RedirectButton text={'Confirmar'} href={'/client/stores'} />
                     </div>
                 </div>
             </div>

@@ -1,0 +1,30 @@
+.stores-list-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    flex: 1;
+}
+
+.stores-list-title{
+    display: flex;
+}
+
+.stores-list-title h1{
+    font-size: 1.5rem;
+    color: white;
+    font-weight: normal;
+}
+
+.stores-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.store-container{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}

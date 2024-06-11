@@ -9,10 +9,13 @@ function ClientStoreView() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, delay: 0}}
-            style={{display: 'flex', width: '100%'}}
+            style={{display: 'flex', flexDirection: 'column', width:'100%', height: '100%',}}
         >   
-        <Navbar />
-                   
+            <Navbar />
+            <div className='store-container'>
+                
+            </div>
+
         </motion.div>
     )
 }
