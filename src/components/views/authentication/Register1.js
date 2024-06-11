@@ -22,26 +22,30 @@ function Register1() {
                 <>
                     <div className="form-group-register">
                         <TextInput
-                            type="text"
-                            placeholder="Nombre"
+                            type={'text'}
+                            placeholder={'Nombre'}
+                            inputMode={'text'}
                         />
                     </div>
                     <div className="form-group-register">
                         <TextInput
-                            type="text"
-                            placeholder="Apellido"
+                            type={'text'}
+                            placeholder={'Apellido'}
+                            inputMode={'text'}
                         />
                     </div>
                     <div className="form-group-register">
                         <TextInput
-                            type="text"
-                            placeholder="DNI"
+                            type={'number'}
+                            placeholder={'DNI'}
+                            inputMode={'numeric'}
                         />
                     </div>
                     <div className="form-group-register">
                         <TextInput
-                            type="text"
-                            placeholder="Celular"
+                            type={'number'}
+                            placeholder={'Celular'}
+                            inputMode={'numeric'}
                         />
                     </div>
                 </>
@@ -51,36 +55,42 @@ function Register1() {
                 <>
                     <div className="form-group-register">
                         <TextInput
-                            type="text"
+                            type={'text'}
                             placeholder="Nombre de la tienda"
+                            inputMode={'text'}
                         />
                     </div>
                     <div className="form-group-register">
                         <TextInput
-                            type="text"
+                            type="number"
                             placeholder="RUC"
+                            inputMode={'numeric'}
                         />
                     </div>
                     <div className="form-group-register">
                         <TextInput
-                            type="text"
+                            type={'text'}
                             placeholder="Nombre del propietario"
+                            inputMode={'text'}
                         />
                     </div>
                     <div className="form-group-register">
                         <TextInput
-                            type="password"
+                            type={'text'}
                             placeholder="Apellido del propietario"
+                            inputMode={'text'}
                         />
                     </div>
                     <div className="form-group-row">
                         <TextInput
-                            type="password"
+                            type={'number'}
                             placeholder="DNI"
+                            inputMode={'numeric'}
                         />
                         <TextInput
-                            type="password"
+                            type={'number'}
                             placeholder="Celular"
+                            inputMode={'numeric'}
                         />
                     </div>
                 </>

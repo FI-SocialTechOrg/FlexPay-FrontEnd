@@ -28,24 +28,28 @@ function Register2() {
                             <TextInput
                                 type = {'text'}
                                 placeholder = {'Correo electrónico'}
+                                inputMode={'email'}
                             />
                         </div>
                         <div className = "form-group-register">
                             <TextInput
                                 type = {'text'}
                                 placeholder = {'Usuario'}
+                                inputMode={'text'}
                             />
                         </div>
                         <div className = "form-group-register">
                             <TextInput
                                 type = {'password'}
                                 placeholder = {'Contraseña'}
+                                inputMode={'none'}
                             />
                         </div>
                         <div className = "form-group-register">
                             <TextInput
                                 type = {'password'}
                                 placeholder = {'Repetir contraseña'}
+                                inputMode={'none'}
                             />
                         </div>
                         <Button text = {'Registrarse'} alignment = {'center'}/>

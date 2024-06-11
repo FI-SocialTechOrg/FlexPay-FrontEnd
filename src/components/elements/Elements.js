@@ -6,12 +6,13 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import '../assets/store_icon.png'; 
 import '../assets/no_image_available.jpg';
 
-function TextInput({ type, placeholder }) {
+function TextInput({ type, placeholder, inputMode }) {
   return (
     <input
       type={type}
       placeholder={placeholder}
       className="text-input"
+      inputMode={inputMode}
     />
   );
 }
