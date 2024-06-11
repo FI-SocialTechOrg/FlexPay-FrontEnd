@@ -32,7 +32,7 @@ function LogIn() {
                                 <TextInput
                                     type = {'text'}
                                     placeholder = {'Ingrese su usuario'}
-                                    inputMode={'email'}
+                                    inputMode={'none'}
                                 />
                             </div>
                         </div>
