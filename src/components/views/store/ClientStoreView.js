@@ -4,7 +4,7 @@ import Navbar from '../../elements/Navbar';
 import { ProductCard } from  '../../elements/Elements';
 
 function ClientStoreView() {
-    // Datos de ejemplo de productos (puedes obtenerlos de tu backend)
+
     const products = [
         { id: 1, name: 'Plátano de seda x kg', price: 2.69, stock: 50, imageUrl: '' },
         { id: 2, name: 'Arándanos 500g', price: 13.99, stock: 20, imageUrl: '' },
@@ -12,9 +12,7 @@ function ClientStoreView() {
         { id: 4, name: 'Avena Quaker 900g', price: 14.50, stock: 16, imageUrl: '' },
     ];
 
-    // Función para agregar un producto al carrito
     const handleAddToCart = (productId) => {
-        // Aquí irá la lógica para agregar el producto al carrito
         console.log('Producto agregado al carrito con ID:', productId);
     };
 
@@ -30,7 +28,6 @@ function ClientStoreView() {
             <div className='store-container'>
                 <h1 className='store-container-title'>Selecciona los productos</h1> 
                 <div className="product-cards">
-                    {/* Itera sobre el array de productos y renderiza una tarjeta de producto para cada uno */}
                     {products.map(product => (
                         <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
                     ))}
