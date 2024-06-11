@@ -42,9 +42,7 @@ function Stores() {
         >
             <Navbar />
             <div className='stores-list-container'>
-                <div className='stores-list-title'> 
-                    <h1>Selecciona tu tienda</h1>
-                </div>
+                <h1 className='stores-list-title'>Selecciona tu tienda</h1>
                 <div className="stores-list">
                     {stores.map(store => (
                         <StoreButton 
