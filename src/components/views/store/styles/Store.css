@@ -28,3 +28,10 @@
     flex-direction: column;
     flex: 1;
 }
+
+@media screen and (max-width: 800px){
+    .stores-list-title h1{
+        font-size: 1.2rem;
+    }
+
+}

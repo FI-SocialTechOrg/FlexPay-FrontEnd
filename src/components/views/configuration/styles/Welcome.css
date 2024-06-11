@@ -12,7 +12,6 @@
     flex-direction: column;
     flex: 1;
     background-color: white;
-    justify-content: center;
 }
 
 .welcome-sub-container{
@@ -98,6 +97,10 @@
         margin: 30px auto;
     }
 
+    .welcome-right-container{
+        justify-content: start;
+    }
+
     .welcome-sub-container{
         margin: 30px 30px 50px ;
     }
@@ -111,12 +114,12 @@
         justify-content: center;
     }
 
-    .welcome-h1{
-        font-size: 1.5em;
+    .welcome-h1, .welcome-name{
+        font-size: 1.2em;
     }
 
-    .welcome-name{
-        font-size: 1.5em;
+    .pay-title{
+        font-size: 1.4em;
     }
 
 }
