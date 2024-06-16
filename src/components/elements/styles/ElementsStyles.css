@@ -275,6 +275,10 @@
       align-self: center;
       width: 90%;
     }
+
+    .product-name, .product-price{
+      font-size: small;
+    }
 }
 
 @media screen and (max-width: 400px){

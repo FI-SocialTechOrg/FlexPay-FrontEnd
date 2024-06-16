@@ -142,10 +142,20 @@
         align-items: start;
         padding: 20px;
         flex: 1;
-
-        .cart-container{
-            flex-direction: column;
-        }
     }
+
+    .store-container-subtitle{
+        font-size: 1rem;
+    }
+
+    .cart-container{
+        flex-direction: column;
+    }
+
+    .summary-card {
+        margin-left: 0;
+        width: 60%;
+    }
+
 
 }
