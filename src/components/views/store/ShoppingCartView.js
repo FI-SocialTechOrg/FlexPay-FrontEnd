@@ -79,7 +79,7 @@ function ShoppingCartView() {
                                 onChange={() => setAcceptedTerms(!acceptedTerms)}
                             />
                             <label htmlFor="terms">
-                                He leído y acepto los <a href="#">Términos y condiciones</a> y la <a href="#">Política de Privacidad</a>
+                                He leído y acepto los <a href="/">Términos y condiciones</a> y la <a href="/">Política de Privacidad</a>
                             </label>
                         </div>
                         <RedirectButton text={'Ir a pagar'} href='/' width='90%'>
