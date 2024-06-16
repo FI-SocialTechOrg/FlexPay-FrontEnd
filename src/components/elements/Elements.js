@@ -2,7 +2,7 @@ import './styles/ElementsStyles.css'
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'; 
+import { faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons'; 
 import '../assets/store_icon.png'; 
 import '../assets/no_image_available.jpg';
 
@@ -26,10 +26,11 @@ function Button({ text, alignment}) {
     > {text} </button>);
 }
 
-function RedirectButton({ text, href }) {
+function RedirectButton({ text, href, width }) {
   return (
     <Link 
       className="colored-button" 
+      style={{width: width}}
       to={href}
     > 
       {text} 
@@ -125,6 +126,28 @@ function ProductCard({ product, onAddToCart }) {
   );
 }
 
+function CartItem({ product, onIncrease, onDecrease, onRemove }) {
+  return (
+      <div className="cart-item">
+          <span className="product-name">{product.name}</span>
+          <div className="quantity-control">
+              <button className="quantity-button" onClick={() => onDecrease(product.id)}>
+                  -
+              </button>
+              <span className="product-quantity">{product.quantity}</span>
+              <button className="quantity-button" onClick={() => onIncrease(product.id)}>
+                  +
+              </button>
+          </div>
+          <span className="product-price">S/ {(product.quantity * product.price).toFixed(2)}</span>
+          <button className="remove-button" onClick={() => onRemove(product.id)}>
+              <FontAwesomeIcon icon={faTrash} />
+          </button>
+      </div>
+  );
+}
+
+
 export { 
   TextInput, 
   Button, 
@@ -134,5 +157,6 @@ export {
   RadioButton, 
   CustomLink, 
   DropDownLight,
-  ProductCard
+  ProductCard,
+  CartItem,
 };

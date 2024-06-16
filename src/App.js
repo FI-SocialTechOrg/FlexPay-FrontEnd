@@ -5,6 +5,8 @@ import Auth from './components/views/authentication/Auth';
 import Welcome from './components/views/configuration/Welcome';
 import ClientStoreView from './components/views/store/ClientStoreView';
 import Stores from './components/views/store/Stores';
+import ShoppingCartView from './components/views/store/ShoppingCartView';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -20,7 +22,8 @@ function App() {
             <Route path="/client/welcome" element={<Welcome />} />
             <Route path="/client/stores" element={<Stores />} />             
             <Route path="/client/stores/:id" element={<ClientStoreView />} /> 
-            </Routes>
+            <Route path='/client/stores/:id/shopping-cart' element={<ShoppingCartView />} />
+          </Routes>
       </AnimatePresence>
     </Router>
   );
