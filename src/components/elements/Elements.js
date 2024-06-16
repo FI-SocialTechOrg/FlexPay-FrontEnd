@@ -114,7 +114,7 @@ function ProductCard({ product, onAddToCart }) {
       <div className="product-card">
           <img src={imageUrl || defaultproductimg} alt={name} className="product-image" />
           <h3>{name}</h3>
-          <div className="product-price">
+          <div className="card-product-price">
             <p className='product-label'>Precio:</p>
             <p className='price'>S/ {price}</p>
           </div>

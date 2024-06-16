@@ -120,6 +120,8 @@
 }
 
 .product-card {
+  display: flex;
+  flex-direction: column;
   width: 200px;
   background-color: white;
   border-radius: 10px;
@@ -142,7 +144,7 @@
   margin: 10px 0;
 }
 
-.product-price{
+.card-product-price{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
