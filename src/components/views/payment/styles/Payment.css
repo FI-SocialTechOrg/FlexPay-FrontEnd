@@ -6,6 +6,12 @@
     flex: 1;
 }
 
+.payment-sub{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
 .payment-input{
     display: flex;
     flex-direction: column;
@@ -93,6 +99,13 @@
     align-items: center; 
 }
 
+.payment-details{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
 
 @media screen and (max-width: 800px){
     .payment-container-title {
@@ -106,12 +119,28 @@
         padding: 20px;
         flex: 1;
     }
+
+    .payment-input{
+        width: 40%;
+    }
+
+    .payment-details{
+        align-items: flex-end;
+    }
     
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
+    .payment-sub{
+        flex-direction: column;
+    }
+
+    .payment-details{
+        align-items: center;
+        margin-top: 30px;
+    }
+
     .payment-input{
         width: 100%;
     }
-    
 }

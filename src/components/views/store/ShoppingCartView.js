@@ -1,9 +1,7 @@
 import React, { useState} from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import Navbar from '../../elements/Navbar';
 import { motion } from "framer-motion";
 import { Button, CartItem } from '../../elements/Elements';
-import { ToastContainer } from 'react-toastify';
 import './styles/Store.css';
 import list_icon from '../../assets/list_icon.png'; 
 
@@ -56,11 +54,9 @@ function ShoppingCartView() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, delay: 0 }}
-            style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
+            style={{ display: 'flex', flexDirection: 'column'}}
         >
-            <ToastContainer />
-            <Navbar />
-            <div className='store-container'>
+            <div className='store-container start'>
                 <h1 className='store-container-title'>Carrito de compras</h1>
                 <div className="cart-container" style={{ display: 'flex' }}>
                     <div className="list">

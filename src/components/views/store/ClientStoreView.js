@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import './styles/Store.css';
-import Navbar from '../../elements/Navbar';
 import { ProductCard } from  '../../elements/Elements';
 
 function ClientStoreView() {
@@ -22,9 +21,8 @@ function ClientStoreView() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, delay: 0}}
-            style={{display: 'flex', flexDirection: 'column', width:'100%', height: '100%',}}
+            style={{display: 'flex', flexDirection: 'column'}}
         >   
-            <Navbar />
             <div className='store-container'>
                 <h1 className='store-container-title'>Selecciona los productos</h1> 
                 <div className="product-cards">

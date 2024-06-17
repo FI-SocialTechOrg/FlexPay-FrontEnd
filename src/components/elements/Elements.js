@@ -73,11 +73,11 @@ function RadioButton({ text, name, value, onChange }) {
   );
 }
 
-function CustomLink({ text, href, alignment, color, fontweight, fontSize }) {
+function CustomLink({ text, href, alignment, color, fontweight, fontSize, decoration}) {
   return (
     <Link className="link" 
       to = {href}
-      style={{alignSelf: alignment || 'center', color: color || '#1983FF', fontWeight: fontweight|| 'normal'}}
+      style={{alignSelf: alignment || 'center', color: color || '#1983FF', fontWeight: fontweight|| 'normal', fontSize: fontSize, textDecoration: decoration || 'none'}}
     > {text} 
     </Link>
   );
@@ -130,15 +130,17 @@ function ProductCard({ product, onAddToCart }) {
   return (
       <div className="product-card">
           <img src={imageUrl || defaultproductimg} alt={name} className="product-image" />
-          <h3>{name}</h3>
-          <div className="card-product-price">
-            <p className='product-label'>Precio:</p>
-            <p className='price'>S/ {price}</p>
+          <div className='product-info'>
+            <h3>{name}</h3>
+            <div className="card-product-price">
+              <p className='product-label'>Precio:</p>
+              <p className='price'>S/ {parseFloat(price).toFixed(2)}</p>
+            </div>
+            <p className='stock'>Stock: {stock} unidades</p>
+            <button onClick={handleAddToCart} disabled={addedToCart}>
+                {addedToCart ? 'Añadido al carrito' : 'Añadir al carrito'}
+            </button>
           </div>
-          <p className='stock'>Stock: {stock} unidades</p>
-          <button onClick={handleAddToCart} disabled={addedToCart}>
-              {addedToCart ? 'Añadido al carrito' : 'Añadir al carrito'}
-          </button>
       </div>
   );
 }
@@ -164,6 +166,26 @@ function CartItem({ product, onIncrease, onDecrease, onRemove }) {
   );
 }
 
+function PaymentDetailsCard ({ remainingAmount, selectedOption, interestRate, interest, totalToPay, onAccept }) {
+  return (
+          <div className='payment-details-card'>
+            <h2>Detalle</h2>
+            <p>Monto a financiar: S/ {remainingAmount.toFixed(2)}</p>
+            <p>Cuotas: {selectedOption === '0' ? 'Sin cuotas' : `${selectedOption} cuotas`}</p>
+            <p>Tasa {selectedOption === '0' ? 'Nominal' : 'Efectiva'} Mensual: {interestRate * 100}%</p>
+            <p>Interés: S/ {interest.toFixed(2)}</p>
+            <hr />
+            <p>Total a pagar: S/ {totalToPay.toFixed(2)}</p>
+            {selectedOption !== '0' && (
+                <div style={{width: '100%', marginTop: '10px', marginBottom: '10px', display: 'flex', justifyContent: 'center'}}>
+                  <CustomLink href="#" text="Ver cronograma de pago" alignment="center" color="blue" fontweight="300" fontSize="small" decoration="underline"/>
+                </div>
+            )}
+            <Button text='Aceptar' alignment='center' onClick={onAccept} width={'100%'}/>
+          </div>
+  );
+};
+
 
 export { 
   TextInput, 
@@ -177,4 +199,5 @@ export {
   DropDownDark,
   ProductCard,
   CartItem,
+  PaymentDetailsCard
 };

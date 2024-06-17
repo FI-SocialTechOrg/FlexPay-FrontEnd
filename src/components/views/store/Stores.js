@@ -2,8 +2,6 @@ import React from 'react';
 import './styles/Store.css';
 import { motion } from 'framer-motion';
 import { StoreButton } from '../../elements/Elements';
-import Navbar from '../../elements/Navbar';
-import { ToastContainer } from 'react-toastify';
 
 const stores = [
     {
@@ -39,10 +37,8 @@ function Stores() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, delay: 0}}
-            style={{display: 'flex', flexDirection: 'column', width:'100%', height: '100%',}}
+            style={{display: 'flex', flexDirection: 'column'}}
         >
-            <ToastContainer />
-            <Navbar />
             <div className='stores-list-container'>
                 <h1 className='stores-list-title'>Selecciona tu tienda</h1>
                 <div className="stores-list">

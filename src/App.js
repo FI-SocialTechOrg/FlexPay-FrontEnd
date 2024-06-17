@@ -3,11 +3,8 @@ import './App.css';
 import { AnimatePresence } from "framer-motion";
 import Auth from './components/views/authentication/Auth';
 import Welcome from './components/views/configuration/Welcome';
-import ClientStoreView from './components/views/store/ClientStoreView';
-import Stores from './components/views/store/Stores';
-import ShoppingCartView from './components/views/store/ShoppingCartView';
+import ClientHomeView from './components/views/home/ClientHomeView';
 import 'react-toastify/dist/ReactToastify.css';
-import PaymentView from './components/views/payment/PaymentView';
 
 function App() {
 
@@ -20,11 +17,8 @@ function App() {
           <Routes>
             <Route exact path="/" element={<Navigate to="/auth" />} />
             <Route exact path="/auth/*" element={<Auth />} />
-            <Route path="/client/welcome" element={<Welcome />} />
-            <Route path="/client/stores" element={<Stores />} />             
-            <Route path="/client/stores/:id" element={<ClientStoreView />} /> 
-            <Route path='/client/stores/:id/shopping-cart' element={<ShoppingCartView />} />
-            <Route path='/client/stores/:id/shopping-cart/payment' element={<PaymentView />} />
+            <Route path="/welcome" element={<Welcome />} />
+            <Route path="/client/*" element={<ClientHomeView />} />
           </Routes>
       </AnimatePresence>
     </Router>

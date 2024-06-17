@@ -55,7 +55,6 @@
 .link{
   font-size: medium;
   cursor: pointer;
-  text-decoration: none;
   font-size: 20px;
 }
 
@@ -179,6 +178,11 @@
   border-radius: 5px;
 }
 
+.product-info{
+  display: flex;
+  flex-direction: column;
+}
+
 .product-card h3 {
   margin-top: 10px;
   font-size: 1rem;
@@ -300,6 +304,88 @@
   color: #ff4d4d;
 }
 
+/*Payment card*/
+
+.payment-details-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 10px;
+  width: 300px;
+}
+
+.payment-details-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  margin-top: 0;
+  color: #333;
+}
+
+.payment-details-card p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.payment-details-card .warning {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.payment-details-card .warning .icon-circle {
+  width: 20px;
+  height: 20px;
+  background-color: #007bff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.payment-details-card .warning .icon-i {
+  font-size: 12px;
+}
+
+.payment-details-card hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 15px 0;
+}
+
+.payment-details-card .total-to-pay {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-top: 15px;
+}
+
+.payment-details-card .button-container {
+  margin-top: 20px;
+}
+
+.payment-details-card .custom-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.payment-details-card .custom-link:hover {
+  text-decoration: underline;
+}
+
+
+@media screen and (max-width: 900px) {
+  .payment-details-card{
+    width: 60%;
+  }
+}
 
 @media screen and (max-width: 800px){
     .text-input{
@@ -329,6 +415,37 @@
       padding-left: 1px;
       padding-right: 1px;
     }
+
+    .payment-details-card{
+      width: 70%;
+    }
+
+}
+
+@media screen and (max-width: 600px){
+  .product-card {
+    width: 80%;
+    flex-direction: row;
+  }
+
+  .product-info{
+    width: 60%;
+    justify-self: center;
+    align-self: center;
+    margin: auto;
+  }
+
+  .product-image{
+    width: 30%;
+  }
+
+  .product-card h3{
+    margin-top: 0;
+  }
+  
+  .payment-details-card{
+    width: 80%;
+  }
 }
 
 @media screen and (max-width: 400px){

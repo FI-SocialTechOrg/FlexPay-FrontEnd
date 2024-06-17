@@ -7,7 +7,7 @@ function Register2() {
     const navigate = useNavigate();
     const handleClick = () => {
         console.log('Iniciando sesión...');
-       navigate('/client/welcome');
+       navigate('/welcome');
     }
 
     return (
