@@ -125,6 +125,15 @@
     margin-bottom: 1em;
 }
 
+.radio-button-text a {
+    color: #1983FF;
+    text-decoration: none;
+}
+
+.radio-button-text a:hover {
+    text-decoration: underline;
+}
+
 .list-icon{
     color: white;
     font-size: 1.5rem;

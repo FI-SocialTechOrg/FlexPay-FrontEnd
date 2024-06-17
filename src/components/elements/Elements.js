@@ -17,11 +17,12 @@ function TextInput({ type, placeholder, inputMode }) {
   );
 }
 
-function Button({ text, alignment}) {
+function Button({ text, alignment, onClick}) {
   return (
   <button 
     className="colored-button"
     type="submit"
+    onClick={onClick}
     style={{alignSelf: alignment}}
     > {text} </button>);
 }

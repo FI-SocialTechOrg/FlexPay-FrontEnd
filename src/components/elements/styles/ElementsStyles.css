@@ -241,7 +241,7 @@
 
 .product-price {
   flex: 1;
-  justify-content: center;
+  text-align: center;
   margin: auto;
 }
 
@@ -280,6 +280,11 @@
 
     .product-name, .product-price{
       font-size: small;
+    }
+
+    .product-quantity{
+      padding-left: 1px;
+      padding-right: 1px;
     }
 }
 

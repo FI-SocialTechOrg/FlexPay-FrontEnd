@@ -1,10 +1,16 @@
 import './styles/Form.css'
 import { motion } from "framer-motion";
 import {TextInput, Button, CustomLink} from "../../elements/Elements";
+import { useNavigate } from 'react-router-dom';
 
 function LogIn() {
     const isSmallScreen = window.innerWidth < 800;
-    
+    const navigate = useNavigate();
+    const handleClick = () => {
+        console.log('Iniciando sesión...');
+       navigate('/client/welcome');
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -50,8 +56,8 @@ function LogIn() {
                         </div>
 
                         {isSmallScreen 
-                        ? <Button text = {'Iniciar Sesión'} alignment = {'center'}/>
-                        : <Button text = {'Iniciar Sesión'} alignment = {'start'}/>
+                        ? <Button text = {'Iniciar Sesión'} alignment = {'center'} onClick={handleClick}/>
+                        : <Button text = {'Iniciar Sesión'} alignment = {'start'} onClick={handleClick}/>
                         }
                     </form>
 
