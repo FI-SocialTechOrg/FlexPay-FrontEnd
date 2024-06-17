@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useLocation } from 'react-router-dom';
+import React, { useState} from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../../elements/Navbar';
 import { motion } from "framer-motion";
-import { CartItem, RedirectButton } from '../../elements/Elements';
+import { Button, CartItem } from '../../elements/Elements';
 import { ToastContainer } from 'react-toastify';
 import './styles/Store.css';
 import list_icon from '../../assets/list_icon.png'; 
@@ -18,6 +18,7 @@ function ShoppingCartView() {
     const [products, setProducts] = useState(productsList);
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
     const currentStoreId = location.pathname.split('/')[3];
 
     const handleIncrease = (id) => {
@@ -38,6 +39,13 @@ function ShoppingCartView() {
 
     const handleRemove = (id) => {
         setProducts(products.filter(product => product.id !== id));
+    };
+
+    const handlePaymentRedirect = () => {
+        if (acceptedTerms) {
+            console.log('Redirigiendo al pago...');
+            navigate(`/client/stores/${currentStoreId}/shopping-cart/payment`)
+        } 
     };
 
     const totalAmount = products.reduce((acc, product) => acc + product.quantity * product.price, 0);
@@ -73,11 +81,10 @@ function ShoppingCartView() {
                             <p>Total </p>
                             <p className="black">S/ {totalAmount.toFixed(2)}</p>
                         </div>
-                        <div className="radio-button-text">
+                        <div className="checkbox-text">
                             <input
-                                type="radio"
+                                type="checkbox"
                                 id="terms"
-                                name="terms"
                                 checked={acceptedTerms}
                                 onChange={() => setAcceptedTerms(!acceptedTerms)}
                             />
@@ -85,8 +92,12 @@ function ShoppingCartView() {
                                 He leído y acepto los <a href="/">Términos y condiciones</a> y la <a href="/">Política de Privacidad</a>
                             </label>
                         </div>
-                        <RedirectButton text={'Ir a pagar'} href={`/client/stores/${currentStoreId}/shopping-cart/payment`} width='90%'>
-                        </RedirectButton>
+                        <Button
+                            text={'Ir a pagar'}
+                            onClick={handlePaymentRedirect}
+                            disabled={!acceptedTerms}
+                            width='100%'
+                        />
                     </div>
                 </div>
             </div>

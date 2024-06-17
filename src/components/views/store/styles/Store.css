@@ -89,22 +89,6 @@
     margin-right: 10px;
 }
 
-.summary-card button {
-    width: 100%;
-    padding: 10px;
-    background-color: #6a758b;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.summary-card button:hover {
-    background-color: #556077;
-}
-
 .ammount{
     display: flex;
     flex-direction: row;
@@ -117,19 +101,19 @@
     font-weight: bold;
 }
 
-.radio-button-text{
+.checkbox-text{
     display: flex;
     align-items: start;
     font-size: small;
     margin-bottom: 1em;
 }
 
-.radio-button-text a {
+.checkbox-text a {
     color: #1983FF;
     text-decoration: none;
 }
 
-.radio-button-text a:hover {
+.checkbox-text a:hover {
     text-decoration: underline;
 }
 

@@ -20,18 +20,18 @@ function TextInput({ type, placeholder, inputMode, value, onChange, max }) {
   );
 }
 
-function Button({ text, alignment, onClick, disabled}) {
+function Button({ text, alignment, onClick, disabled, width}) {
   return (
   <button 
     className="colored-button"
     type="submit"
     onClick={onClick}
-    style={{alignSelf: alignment}}
+    style={{alignSelf: alignment, width: width}}
     disabled={disabled || false}
     > {text} </button>);
 }
 
-function RedirectButton({ text, href, width }) {
+function RedirectButton({ text, href, width, disabled }) {
   return (
     <Link 
       className="colored-button" 

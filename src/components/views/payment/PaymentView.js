@@ -140,7 +140,7 @@ function PaymentView() {
                         </motion.div>
                     )}
 
-                    <Button text='Continuar' alignment='flex-start' onClick={handleContinue} disabled={initialPayment > totalAmount} />
+                    <Button text='Continuar' alignment='flex-start' onClick={handleContinue} />
                 </form>
 
             </div>

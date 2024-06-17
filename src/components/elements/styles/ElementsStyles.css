@@ -39,6 +39,10 @@
     background-color: #A6C8F0;
 }
 
+.colored-button:disabled:hover{
+    background-color: #A6C8F0;
+}
+
 .radio-button{
   color: white;
   font-size: medium;
