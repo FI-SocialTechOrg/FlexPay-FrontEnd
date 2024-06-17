@@ -38,7 +38,6 @@ function LogIn() {
                                 <TextInput
                                     type = {'text'}
                                     placeholder = {'Ingrese su usuario'}
-                                    inputMode={'none'}
                                 />
                             </div>
                         </div>
