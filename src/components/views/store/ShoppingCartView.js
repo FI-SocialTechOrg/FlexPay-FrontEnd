@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from 'react-router-dom';
 import Navbar from '../../elements/Navbar';
 import { motion } from "framer-motion";
 import { CartItem, RedirectButton } from '../../elements/Elements';
@@ -16,6 +17,8 @@ const productsList = [
 function ShoppingCartView() {
     const [products, setProducts] = useState(productsList);
     const [acceptedTerms, setAcceptedTerms] = useState(false);
+    const location = useLocation();
+    const currentStoreId = location.pathname.split('/')[3];
 
     const handleIncrease = (id) => {
         setProducts(products.map(product =>
@@ -82,7 +85,7 @@ function ShoppingCartView() {
                                 He leído y acepto los <a href="/">Términos y condiciones</a> y la <a href="/">Política de Privacidad</a>
                             </label>
                         </div>
-                        <RedirectButton text={'Ir a pagar'} href='/' width='90%'>
+                        <RedirectButton text={'Ir a pagar'} href={`/client/stores/${currentStoreId}/shopping-cart/payment`} width='90%'>
                         </RedirectButton>
                     </div>
                 </div>

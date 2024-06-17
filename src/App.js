@@ -7,6 +7,7 @@ import ClientStoreView from './components/views/store/ClientStoreView';
 import Stores from './components/views/store/Stores';
 import ShoppingCartView from './components/views/store/ShoppingCartView';
 import 'react-toastify/dist/ReactToastify.css';
+import PaymentView from './components/views/payment/PaymentView';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="/client/stores" element={<Stores />} />             
             <Route path="/client/stores/:id" element={<ClientStoreView />} /> 
             <Route path='/client/stores/:id/shopping-cart' element={<ShoppingCartView />} />
+            <Route path='/client/stores/:id/shopping-cart/payment' element={<PaymentView />} />
           </Routes>
       </AnimatePresence>
     </Router>

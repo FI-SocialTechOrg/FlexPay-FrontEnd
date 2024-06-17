@@ -6,24 +6,28 @@ import { faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons';
 import '../assets/store_icon.png'; 
 import '../assets/no_image_available.jpg';
 
-function TextInput({ type, placeholder, inputMode }) {
+function TextInput({ type, placeholder, inputMode, value, onChange, max }) {
   return (
     <input
       type={type}
       placeholder={placeholder}
       className="text-input"
       inputMode={inputMode}
+      value={value} 
+      onChange={onChange}
+      max={max}
     />
   );
 }
 
-function Button({ text, alignment, onClick}) {
+function Button({ text, alignment, onClick, disabled}) {
   return (
   <button 
     className="colored-button"
     type="submit"
     onClick={onClick}
     style={{alignSelf: alignment}}
+    disabled={disabled || false}
     > {text} </button>);
 }
 
@@ -69,11 +73,11 @@ function RadioButton({ text, name, value, onChange }) {
   );
 }
 
-function CustomLink({ text, href, alignment }) {
+function CustomLink({ text, href, alignment, color, fontweight, fontSize }) {
   return (
     <Link className="link" 
       to = {href}
-      style={{alignSelf: alignment}}
+      style={{alignSelf: alignment || 'center', color: color || '#1983FF', fontWeight: fontweight|| 'normal'}}
     > {text} 
     </Link>
   );
@@ -92,6 +96,18 @@ function CustomOptions({ text }) {
 function DropDownLight({ options, onChange }) {
   return (
     <select className="dropdown-light" onChange={onChange}>
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.text}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+function DropDownDark({ options, onChange, marginbottom }) {
+  return (
+    <select className="dropdown-dark" onChange={onChange} style={{marginBottom: marginbottom || 0}}>
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.text}
@@ -158,6 +174,7 @@ export {
   RadioButton, 
   CustomLink, 
   DropDownLight,
+  DropDownDark,
   ProductCard,
   CartItem,
 };

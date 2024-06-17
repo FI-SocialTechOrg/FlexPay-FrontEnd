@@ -1,0 +1,117 @@
+.payment-container{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 20px 50px;
+    flex: 1;
+}
+
+.payment-input{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    transition: all 0.3s ease;
+}
+
+.payment-container-title {
+    font-size: 1.5rem;
+    color: white;
+    font-weight: normal;
+}
+
+.textinput-title-payment{
+    width: 100%;
+    color: white;
+    text-align: left;
+    font-size: medium;
+    font-weight: 300;
+}
+
+.total-box {
+    max-width: 200px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group-payment{
+    display: flex;
+    width: 100%;
+}
+
+.amount {
+    font-weight: bold;
+    color: #001136; /* Color del monto */
+}
+
+.warning{
+    color: #A6C8F0;
+    font-size: smaller;
+    display: flex;
+    align-items: center;
+    margin-top: 10px; 
+}
+
+.icon-circle {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+    min-height: 15px;
+    border-radius: 50%;
+    background-color: #A6C8F0; 
+    margin-right: 8px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+.icon-i {
+    font-size: smaller; /* Tamaño del icono de información */
+    color: #001136; /* Color del icono de información */
+    align-self: center;
+    justify-self: center;
+    font-weight: 600;
+}
+
+.grace-period {
+    color: white;
+    font-size: small;
+    display: flex;
+    align-items: center; 
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.grace-period label {
+    display: flex; 
+    align-items: center; 
+}
+
+
+@media screen and (max-width: 800px){
+    .payment-container-title {
+        font-size: 1.2rem;
+    }
+
+    .payment-container{
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        padding: 20px;
+        flex: 1;
+    }
+    
+}
+
+@media screen and (max-width: 500px) {
+    .payment-input{
+        width: 100%;
+    }
+    
+}
