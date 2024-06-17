@@ -21,6 +21,19 @@
     outline: none;
 }
 
+.text-input-light{
+    width: 100%;
+    background-color: white;
+    border: 1px solid #001136;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 14px;
+    color: #001136;
+    transition: all 0.3s ease;
+    outline: none;
+    font-size: medium;
+}
+
 .colored-button{
     background-color: #1983FF;
     color: white;
@@ -380,6 +393,72 @@
   text-decoration: underline;
 }
 
+/*Card para editar producto*/
+
+.layer{
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  background-color: #001136c2 ;
+  top: 0;
+}
+
+.edit-product-card{
+  display: flex;
+  flex-direction: column;
+  top: 20%;
+  margin:auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 250px;
+}
+
+.edit-form{
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-group{
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0;
+  justify-items: flex-start;
+  gap: 10px;
+  align-items: center;
+}
+
+.edit-label{
+  font-size: 1rem;
+  width: max-content;
+  margin: 0;
+}
+
+.cancel-icon{
+  color: #A6C8F0;
+  font-size: 1.2em;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-bottom: 10px;
+}
+
+.cancel-icon:hover{
+  color: #007bff;
+}
+
+.product-edit-image{
+  width: 60%;
+  height: auto;
+  border-radius: 5px;
+  align-self: center;
+}
+
+.close{
+  display: none;
+}
 
 @media screen and (max-width: 900px) {
   .payment-details-card{

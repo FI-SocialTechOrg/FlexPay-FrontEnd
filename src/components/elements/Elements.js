@@ -1,8 +1,9 @@
 import './styles/ElementsStyles.css'
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'; 
+import { faChevronDown, faClose, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'; 
 import '../assets/store_icon.png'; 
 import '../assets/no_image_available.jpg';
 
@@ -16,6 +17,20 @@ function TextInput({ type, placeholder, inputMode, value, onChange, max }) {
       value={value} 
       onChange={onChange}
       max={max}
+    />
+  );
+}
+
+function TextInputLight({ type, placeholder, inputMode, value, onChange, maxWidth }) {
+  return (
+    <input
+      type={type}
+      placeholder={placeholder}
+      className="text-input-light"
+      inputMode={inputMode}
+      value={value} 
+      onChange={onChange}
+      style={{maxWidth: maxWidth || '100%'}}
     />
   );
 }
@@ -149,26 +164,27 @@ function ProductEditCard({ product, onEdit }) {
   const defaultproductimg = require('../assets/no_image_available.jpg');
   const { id, name, price, stock, imageUrl } = product;
 
-  const handleEdit = () => {
-      onEdit(id);
+  const handleEditClick = () => {
+    console.log('Editando producto con ID:', id);
+    onEdit(product); 
   };
 
   return (
-      <div className="product-card">
-          <img src={imageUrl || defaultproductimg} alt={name} className="product-image" />
-          <div className='product-info'>
-            <h3>{name}</h3>
-            <div className="card-product-price">
-              <p className='product-label'>Precio:</p>
-              <p className='price'>S/ {parseFloat(price).toFixed(2)}</p>
-            </div>
-            <p className='stock'>Stock: {stock} unidades</p>
-            <button onClick={handleEdit}>
-                <FontAwesomeIcon icon={faEdit} style={{paddingRight: '5px'}}/>
-                Editar
-            </button>
-          </div>
+    <div className="product-card">
+        <img src={imageUrl || defaultproductimg} alt={name} className="product-image" />
+        <div className='product-info'>
+        <h3>{name}</h3>
+        <div className="card-product-price">
+          <p className='product-label'>Precio:</p>
+          <p className='price'>S/ {parseFloat(price).toFixed(2)}</p>
+        </div>
+        <p className='stock'>Stock: {stock} unidades</p>
+        <button onClick={handleEditClick}>
+          <FontAwesomeIcon icon={faEdit} style={{ paddingRight: '5px' }} />
+          Editar
+        </button>
       </div>
+    </div>
   );
 }
 
@@ -213,9 +229,108 @@ function PaymentDetailsCard ({ remainingAmount, selectedOption, interestRate, in
   );
 };
 
+function EditProduct({ product_id, image, product_name, product_price, product_stock, onEdit, onClose}) {
+  const defaultproductimg = require('../assets/no_image_available.jpg');
+  const [name, setName] = useState(product_name);
+  const [price, setPrice] = useState(product_price);
+  const [stock, setStock] = useState(product_stock);
+
+  const handleEdit = (e) => {
+    e.preventDefault();
+    console.log('ID del producto:', product_id);
+    console.log('Nombre del producto:', name);
+    console.log('Precio:', price);
+    console.log('Stock:', stock);
+
+    const updatedProduct = {
+      id: product_id,
+      name: name,
+      price: parseFloat(price),
+      stock: parseInt(stock),
+      imageUrl: image || defaultproductimg  
+    };
+
+    onEdit(updatedProduct);
+  };
+
+  const handleChangeName = (e) => {
+    setName(e.target.value);
+  };
+
+  const handleChangePrice = (e) => {
+    setPrice(e.target.value);
+  };
+
+  const handleChangeStock = (e) => {
+    setStock(e.target.value);
+  };
+
+  const handleClose = (e) => {
+    onClose();
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0}}
+      animate={{ opacity: 1,}}
+      exit={{ opacity: 0}}
+      transition={{ duration: 0.3, delay: 0 }}
+     className='layer'>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className='edit-product-card'
+        >
+          <form className='edit-form'>
+            <FontAwesomeIcon icon={faClose} className='cancel-icon' onClick={handleClose} />
+            <img src={image || defaultproductimg} alt={name} className="product-edit-image" />
+
+            <div className='edit-group'>
+              <TextInputLight
+                type='text'
+                placeholder='Nombre del producto'
+                value={name}
+                maxWidth='100%'
+                onChange={handleChangeName}
+              />
+            </div>
+            <div className='edit-group'>
+              <p className='edit-label'>Precio:</p>
+              <p className='edit-label'>S/</p>
+              <TextInputLight
+                type='text'
+                placeholder='Precio'
+                value={price}
+                maxWidth='30%'
+                onChange={handleChangePrice}
+              />
+            </div>
+
+            <div className='edit-group'>
+              <p className='edit-label'>Stock:</p>
+              <TextInputLight
+                type='text'
+                placeholder='Stock'
+                value={stock}
+                maxWidth='20%'
+                onChange={handleChangeStock}
+              />
+              <p className='edit-label'>unidades</p>
+            </div>
+
+            <Button text='Guardar' alignment='center' onClick={handleEdit} width='100%' />
+          </form>
+        </motion.div>
+    </motion.div>
+  );
+}
+
 
 export { 
   TextInput, 
+  TextInputLight,
   Button, 
   RedirectButton, 
   StoreButton, 
@@ -227,5 +342,6 @@ export {
   ProductCard,
   ProductEditCard,
   CartItem,
-  PaymentDetailsCard
+  PaymentDetailsCard,
+  EditProduct
 };
