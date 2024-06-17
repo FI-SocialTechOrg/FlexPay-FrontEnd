@@ -5,6 +5,7 @@ import Auth from './components/views/authentication/Auth';
 import Welcome from './components/views/configuration/Welcome';
 import ClientHomeView from './components/views/home/ClientHomeView';
 import 'react-toastify/dist/ReactToastify.css';
+import StoreHomeView from './components/views/home/StoreHomeView';
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
             <Route exact path="/auth/*" element={<Auth />} />
             <Route path="/welcome" element={<Welcome />} />
             <Route path="/client/*" element={<ClientHomeView />} />
+            <Route path="/store/*" element={<StoreHomeView />} />
           </Routes>
       </AnimatePresence>
     </Router>

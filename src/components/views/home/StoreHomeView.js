@@ -3,12 +3,9 @@ import { motion } from 'framer-motion';
 import Navbar from '../../elements/Navbar';
 import { ToastContainer } from 'react-toastify';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import Stores from '../store/Stores';
-import ClientStoreView from '../store/ClientStoreView';
-import ShoppingCartView from '../store/ShoppingCartView';
-import PaymentView from '../payment/PaymentView';
+import OwnerStoreView from '../store/OwnerStoreView';
 
-function ClientHomeView() {
+function StoreHomeView() {
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -21,14 +18,11 @@ function ClientHomeView() {
             <Navbar />
             <div className='home-container'>
                <Routes>
-                <Route path="/" element={<Navigate to="/client/stores" />} />
-                <Route path="/stores" element={<Stores />} />             
-                <Route path="/stores/:id" element={<ClientStoreView />} /> 
-                <Route path='/stores/:id/shopping-cart' element={<ShoppingCartView />} />
-                <Route path='/stores/:id/shopping-cart/payment' element={<PaymentView />} />
+                <Route path="/" element={<Navigate to="/store/products" />} />
+                <Route path="/products" element={<OwnerStoreView />} />             
                </Routes>
             </div>
         </motion.div>)
 }
 
-export default ClientHomeView;
+export default StoreHomeView;

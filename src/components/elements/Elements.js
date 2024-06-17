@@ -2,7 +2,7 @@ import './styles/ElementsStyles.css'
 import { useState } from 'react';
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons'; 
+import { faChevronDown, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'; 
 import '../assets/store_icon.png'; 
 import '../assets/no_image_available.jpg';
 
@@ -145,6 +145,33 @@ function ProductCard({ product, onAddToCart }) {
   );
 }
 
+function ProductEditCard({ product, onEdit }) {
+  const defaultproductimg = require('../assets/no_image_available.jpg');
+  const { id, name, price, stock, imageUrl } = product;
+
+  const handleEdit = () => {
+      onEdit(id);
+  };
+
+  return (
+      <div className="product-card">
+          <img src={imageUrl || defaultproductimg} alt={name} className="product-image" />
+          <div className='product-info'>
+            <h3>{name}</h3>
+            <div className="card-product-price">
+              <p className='product-label'>Precio:</p>
+              <p className='price'>S/ {parseFloat(price).toFixed(2)}</p>
+            </div>
+            <p className='stock'>Stock: {stock} unidades</p>
+            <button onClick={handleEdit}>
+                <FontAwesomeIcon icon={faEdit} style={{paddingRight: '5px'}}/>
+                Editar
+            </button>
+          </div>
+      </div>
+  );
+}
+
 function CartItem({ product, onIncrease, onDecrease, onRemove }) {
   return (
       <div className="cart-item">
@@ -198,6 +225,7 @@ export {
   DropDownLight,
   DropDownDark,
   ProductCard,
+  ProductEditCard,
   CartItem,
   PaymentDetailsCard
 };
