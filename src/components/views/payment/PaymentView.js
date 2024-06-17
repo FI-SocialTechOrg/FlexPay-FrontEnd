@@ -41,12 +41,14 @@ function PaymentView() {
 
     const handleDropdownChange = (event) => {
         setSelectedOption(event.target.value);
+        setShowCard(false);
         setIncludeGracePeriod(false);
     };
 
     const handleInitialPaymentChange = (event) => {
         const value = event.target.value;
-    
+        setShowCard(false);
+        
         if (value === '') {
             setInitialPayment('');
         } else {
@@ -149,18 +151,26 @@ function PaymentView() {
                         )}
                     </form>
 
-                    <div className='payment-details'>
+                            
                         {showCard && (
-                            <PaymentDetailsCard
-                                remainingAmount={financeAmount}
-                                selectedOption={selectedOption}
-                                interestRate={interestRate}
-                                interest={interest}
-                                totalToPay={totalToPay}
-                                onAccept={() => console.log('Pago aceptado')}
-                            />
+                            <motion.div
+                            initial={{ opacity: 0, y: -20 }}  
+                            animate={{ opacity: 1, y: 0 }}   
+                            exit={{ opacity: 0, y: -20 }}     
+                            transition={{ duration: 0.3, delay: 0 }}
+                            className='payment-details'
+                            >
+                                <PaymentDetailsCard
+                                    remainingAmount={financeAmount}
+                                    selectedOption={selectedOption}
+                                    interestRate={interestRate}
+                                    interest={interest}
+                                    totalToPay={totalToPay}
+                                    onAccept={() => console.log('Pago aceptado')}
+                                />
+                            </motion.div>
                         )}
-                    </div>
+                    
                 </div>
 
             </div>
