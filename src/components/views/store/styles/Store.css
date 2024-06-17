@@ -157,6 +157,10 @@
         font-size: 1rem;
     }
 
+    .stores-list{
+        gap: 0px;
+    }
+
     .cart-container{
         flex-direction: column;
     }
