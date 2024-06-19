@@ -1,0 +1,19 @@
+.store-configuration{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 20px 50px;
+    flex: 1;
+}
+
+.store-configuration-title{
+    font-size: 1.5rem;
+    color: white;
+    font-weight: normal;
+}
+
+@media screen and (max-width: 800px){
+    .payment-container-title {
+        font-size: 1.2rem;
+    }
+}
