@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from "framer-motion";
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/StoreConfiguration.css';
 
