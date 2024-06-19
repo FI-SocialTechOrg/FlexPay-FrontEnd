@@ -4,6 +4,7 @@ import Navbar from '../../elements/Navbar';
 import { ToastContainer } from 'react-toastify';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import OwnerStoreView from '../store/OwnerStoreView';
+import StoreConfiguration from '../configuration/StoreConfiguration';
 
 function StoreHomeView() {
     return (
@@ -19,7 +20,8 @@ function StoreHomeView() {
             <div className='home-container'>
                <Routes>
                 <Route path="/" element={<Navigate to="/store/products" />} />
-                <Route path="/products" element={<OwnerStoreView />} />             
+                <Route path="/products" element={<OwnerStoreView />} />     
+                <Route path='/configuration' element={<StoreConfiguration/> } />       
                </Routes>
             </div>
         </motion.div>)
