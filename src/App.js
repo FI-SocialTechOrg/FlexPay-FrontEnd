@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Auth from './components/views/authentication/Auth';
 import Welcome from './components/views/configuration/Welcome';
@@ -9,7 +9,23 @@ import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  const [user, setUser] = useState({ isLoggedIn: false, type: null });
+  const getInitialUserState = () => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      return JSON.parse(storedUser);
+    } else {
+      return { isLoggedIn: false, type: null };
+    }
+  };
+
+  const [user, setUser] = useState(getInitialUserState);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const PrivateRoute = ({ element: Component, isLoggedIn, allowedType, ...rest }) => {
     return isLoggedIn && user.type === allowedType ? (

@@ -7,7 +7,7 @@ import { faChevronDown, faClose, faEdit, faTrash } from '@fortawesome/free-solid
 import '../assets/store_icon.png'; 
 import '../assets/no_image_available.jpg';
 
-function TextInput({ type, placeholder, inputMode, value, onChange, max }) {
+function TextInput({ type, placeholder, inputMode, value, onChange, max, maxWidth, maxHeight }) {
   return (
     <input
       type={type}
@@ -17,6 +17,7 @@ function TextInput({ type, placeholder, inputMode, value, onChange, max }) {
       value={value} 
       onChange={onChange}
       max={max}
+      style={{maxWidth: maxWidth || '100%', maxHeight: maxHeight}}
     />
   );
 }
@@ -73,7 +74,7 @@ function StoreButton({ id, name, logo, ruc }) {
   );
 }
 
-function RadioButton({ text, name, value, onChange }) {
+function RadioButton({ text, name, value, onChange, checked }) {
   return (
     <label className="radio-button">
       <input
@@ -81,17 +82,19 @@ function RadioButton({ text, name, value, onChange }) {
         name={name}
         value={value}
         onChange={onChange}
-        defaultChecked={value === 'client'}
+        checked={checked}
+        
       />
-      {text}  
+      {text}
     </label>
   );
 }
 
-function CustomLink({ text, href, alignment, color, fontweight, fontSize, decoration}) {
+function CustomLink({ text, href, handleClick, alignment, color, fontweight, fontSize, decoration}) {
   return (
     <Link className="link" 
       to = {href}
+      onClick={handleClick}
       style={{alignSelf: alignment || 'center', color: color || '#1983FF', fontWeight: fontweight|| 'normal', fontSize: fontSize, textDecoration: decoration || 'none'}}
     > {text} 
     </Link>
@@ -280,7 +283,7 @@ function EditProduct({ product_id, image, product_name, product_price, product_s
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
           className='edit-product-card'
         >
           <form className='edit-form'>

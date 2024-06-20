@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './styles/Form.css'
 import {TextInput, RadioButton, CustomLink} from "../../elements/Elements";
 import { motion } from "framer-motion";
@@ -15,6 +15,10 @@ function Register1() {
             setOpacity(1);
         }, 300);
     }
+
+    useEffect(() => {
+        console.log('Usuario seleccionado:', userChecked);
+    }, [userChecked]);
 
     function renderFormFields() {
         if (userChecked === 'client') {
@@ -107,7 +111,7 @@ function Register1() {
             style={{display: 'flex', width: '100%'}}
         >
     
-                    <form className="form">
+                    <div className="form">
                         <div className="title-container">
                             <h1 className="form-title">
                                 Crea una cuenta
@@ -118,8 +122,20 @@ function Register1() {
                             </div>
                         </div>
                         <div className="user-option">
-                            <RadioButton name="userType" text="Cliente" value="client" onChange={onCheckChange} defaultChecked /> 
-                            <RadioButton name="userType" text="Tienda" value="store" onChange={onCheckChange}/> 
+                            <RadioButton 
+                                name="userType" 
+                                text="Cliente" 
+                                value="client" 
+                                onChange={onCheckChange} 
+                                checked={userChecked === 'client'} 
+                            /> 
+                            <RadioButton 
+                                name="userType" 
+                                text="Tienda" 
+                                value="store" 
+                                onChange={onCheckChange} 
+                                checked={userChecked === 'store'} 
+                            /> 
                         </div>
 
                         <div className='render-form' style={{ opacity: opacity }} >
@@ -127,7 +143,7 @@ function Register1() {
                         </div>
                         
                         <CustomLink text="Siguiente >" href={"/auth/register/2"} alignment={"end"}/>
-                    </form>
+                    </div>
         
         </motion.div>
     )

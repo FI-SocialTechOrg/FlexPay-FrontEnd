@@ -57,6 +57,8 @@
 }
 
 .radio-button{
+  display: flex;
+  flex-direction: row;
   color: white;
   font-size: medium;
   border: 1px solid #6a758b;  
