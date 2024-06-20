@@ -43,6 +43,10 @@ function Navbar() {
         }
     }
 
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+    }
+
     const handleCartClick = () => {
         if (location.pathname === '/client/stores') {
             toast.error("Selecciona una tienda antes de ir al carrito", {
@@ -92,7 +96,7 @@ function Navbar() {
                                     <Link to="/store/configuration">Configuración</Link>
                                 </>
                             )}
-                            <Link to="/auth/login">Cerrar sesión</Link>
+                            <Link to="/auth/login" onClick={handleLogout}>Cerrar sesión</Link>
                         </div>
                     </div>
                 </div>
@@ -122,7 +126,7 @@ function Navbar() {
                             <li><Link to="/store/configuration">Configuración</Link></li>
                             </>
                         )}
-                        <li><Link to="/auth/login">Cerrar sesión</Link></li>
+                        <li><Link to="/auth/login" onClick={handleLogout}>Cerrar sesión</Link></li>
                     </ul>
                 </div>
             </div>
