@@ -1,39 +1,70 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { TextInput, Button, CustomLink } from '../../elements/Elements';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import LoginRequest from '../../../model/dto/request/LoginRequest';
+import AuthService from '../../../service/AuthService';
+import AccountService from '../../../service/AccountService';
 
 function LogIn({ setUser }) {
     const isSmallScreen = window.innerWidth < 800;
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (localStorage.getItem('user') !== null) {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user.isLoggedIn && user.role === 1) {
+                navigate('/welcome');
+            } else if (user.isLoggedIn && user.role === 2) {
+                navigate('/store');
+            }
+        }
+    },);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    //Simulación de data
-    const data = [
-        { email: 'cliente@gmail.com', password: 'cliente123.', type: 'client' },
-        { email: 'tienda@gmail.com', password: 'tienda123.', type: 'store' }
-    ];
+    const authenticationService = new AuthService();
+    const accountService = new AccountService();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (email && password) {
-            const user = data.find(user => user.email === email && user.password === password);
-            const userData = { isLoggedIn: true, type: user.type };
-            setUser(userData);
+        if(email && password){
+            console.log('Iniciando sesión...');
+            const loginReq = new LoginRequest(email, password);
+            try{
+                const logRes = await authenticationService.login(loginReq);
+                if (logRes.status === 200 || logRes.status === 201) {
+                    const id = logRes.data.data.id;
+                    const token = logRes.data.data.token;
+                    const accountRes = await accountService.getAccountById(id, token);
+                    if (accountRes.status === 200 || accountRes.status === 201) {
+                        const account = accountRes.data.data;
+                        const role = account.role.id;
 
-            if(user){
-                // Guardar en localStorage
-                localStorage.setItem('user', JSON.stringify(userData)); 
-                if (user.type === 'client') {
-                    navigate('/welcome');
-                } else if (user.type === 'store') {
-                    navigate('/store');
-                }   
+                        //Guardar data
+                        const userData = { isLoggedIn: true, id: id, token: token, account: account, role: role};
+                        localStorage.setItem('user', JSON.stringify(userData));
+                        setUser(userData);
+
+                        //Redirigir
+                        if (role === 1) {
+                            console.log('Iniciando sesión como cliente...');
+                            navigate('/welcome');
+                        } else if (role === 2) {
+                            navigate('/store');
+                        }
+                    } else {
+                        console.log('Error al obtener la cuenta');
+                    }
+                }
             }
+            catch(error){
+                console.log('Error durante el inicio de sesión: ' + error);
+            }
+
         } else { 
             toast.error("Por favor, ingrese los campos solicitados", {
                 position: "top-center",

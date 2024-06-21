@@ -5,9 +5,34 @@ import { useState } from 'react';
 import logo from '../../assets/flexpay_logo.png';
 import calendar from '../../assets/calendar.png';
 import { RedirectButton, DropDownLight } from '../../elements/Elements';
+import ClientService from '../../../service/ClientService';
 
-function Auth() {
-    var name = "Carlos";
+function Welcome() {
+    const [name, setName] = useState('');
+
+    const clientService = new ClientService();
+
+    const getAccountData = async () => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const id = user.id;
+        const token = user.token;
+        try {
+            const accountRes = await clientService.getclientByAccountId(id, token);
+            console.log(accountRes); 
+            if(accountRes.status === 200 || accountRes.status === 201){
+                const firstName = accountRes.data.data.firstName;
+                setName(firstName);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+   
+    useState(() => {
+        getAccountData();
+    }, []);
 
     const generateOptions = (start, end) => {
         const options = [];
@@ -63,4 +88,4 @@ function Auth() {
     )
 }
 
-export default Auth;
+export default Welcome;

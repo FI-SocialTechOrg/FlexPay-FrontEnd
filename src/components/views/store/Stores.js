@@ -1,36 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './styles/Store.css';
 import { motion } from 'framer-motion';
 import { StoreButton } from '../../elements/Elements';
-
-const stores = [
-    {
-        id: 1,
-        name: 'Bodega de la esquina',
-        logo: '',
-        ruc: '1234567890'
-    },
-    {
-        id: 2,
-        name: 'Panadería',
-        logo: '',
-        ruc: '0965823451'
-    },
-    {
-        id: 3,
-        name: 'Carnicería',
-        logo: '',
-        ruc: '0987654321'
-    },
-    {
-        id: 4,
-        name: 'Minimarket',
-        logo: '',
-        ruc: '0998546610'
-    }, 
-];
+import StoreService from '../../../service/StoreService';
 
 function Stores() {
+    const [stores, setStores] = useState([]);
+    const storeService = new StoreService();
+
+    const getStores = async () => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const token = user.token;
+
+        try{
+            const storeRes = await storeService.getStores(token);
+            const stores = storeRes.data.data;
+            setStores(stores);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useState(() => {
+        getStores();
+    }, []);
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -46,7 +42,7 @@ function Stores() {
                         <StoreButton 
                         key={store.id}
                         id={store.id}
-                        name={store.name}
+                        name={store.companyName}
                         logo={store.logo}
                         ruc={store.ruc}
                         />
