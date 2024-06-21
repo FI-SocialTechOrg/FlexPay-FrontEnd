@@ -47,11 +47,14 @@ function LogIn({ setUser }) {
                     const id = logRes.data.data.id;
                     const token = logRes.data.data.token;
                     const accountRes = await accountService.getAccountById(id, token);
-                    const clientRes = await clientService.getclientByAccountId(id, token);
                     let boolCreditTerm = false;
-                    if(clientRes.status === 200 || clientRes.status === 201){
-                        if (clientRes.data.data.creditTerm !== 0 && clientRes.data.data.creditTerm !== null) {
-                            boolCreditTerm = true;
+                    
+                    if (accountRes.data.data.role.id === 1) {
+                        const clientRes = await clientService.getclientByAccountId(id, token);
+                        if(clientRes.status === 200 || clientRes.status === 201){
+                            if (clientRes.data.data.creditTerm !== 0 && clientRes.data.data.creditTerm !== null) {
+                                boolCreditTerm = true;
+                            }
                         }
                     }
 
