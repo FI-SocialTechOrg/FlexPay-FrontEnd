@@ -4,6 +4,7 @@ import Auth from './components/views/authentication/Auth';
 import Welcome from './components/views/configuration/Welcome';
 import ClientHomeView from './components/views/home/ClientHomeView';
 import StoreHomeView from './components/views/home/StoreHomeView';
+import Error404 from './components/views/error/Error404';
 import { AnimatePresence } from "framer-motion";
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,7 +15,7 @@ function App() {
       if (storedUser) {
           return JSON.parse(storedUser);
       } else {
-          return { isLoggedIn: false, id: null, token: null, account: null, role: null };
+          return { isLoggedIn: false, id: null, token: null, account: null, role: null, isExistCreditTerms: false};
       }
   };
 
@@ -46,7 +47,7 @@ function App() {
                   <Route path="/welcome" element={<PrivateRoute element={Welcome} isLoggedIn={user.isLoggedIn} allowedType={1} />} />
                   <Route path="/client/*" element={<PrivateRoute element={ClientHomeView} isLoggedIn={user.isLoggedIn} allowedType={1} />} />
                   <Route path="/store/*" element={<PrivateRoute element={StoreHomeView} isLoggedIn={user.isLoggedIn} allowedType={2} />} />
-                  <Route path="*" element={<Navigate to="/auth" />} />
+                  <Route path="*" element={user.isLoggedIn ? <Error404 /> : <Navigate to="/auth" />} />
               </Routes>
           </AnimatePresence>
       </Router>

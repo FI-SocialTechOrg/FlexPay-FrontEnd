@@ -43,7 +43,7 @@ function Stores() {
                         key={store.id}
                         id={store.id}
                         name={store.companyName}
-                        logo={store.logo}
+                        logo={store.imageUrl}
                         ruc={store.ruc}
                         />
                     ))}

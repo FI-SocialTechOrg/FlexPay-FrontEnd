@@ -8,6 +8,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import LoginRequest from '../../../model/dto/request/LoginRequest';
 import AuthService from '../../../service/AuthService';
 import AccountService from '../../../service/AccountService';
+import ClientService from '../../../service/ClientService';
 
 function LogIn({ setUser }) {
     const isSmallScreen = window.innerWidth < 800;
@@ -18,6 +19,8 @@ function LogIn({ setUser }) {
             const user = JSON.parse(localStorage.getItem('user'));
             if (user.isLoggedIn && user.role === 1) {
                 navigate('/welcome');
+            } else if (user.isLoggedIn && user.role === 1 && user.isExistCreditTerms) {
+                navigate('/client/stores');
             } else if (user.isLoggedIn && user.role === 2) {
                 navigate('/store');
             }
@@ -30,6 +33,7 @@ function LogIn({ setUser }) {
 
     const authenticationService = new AuthService();
     const accountService = new AccountService();
+    const clientService = new ClientService();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -43,19 +47,29 @@ function LogIn({ setUser }) {
                     const id = logRes.data.data.id;
                     const token = logRes.data.data.token;
                     const accountRes = await accountService.getAccountById(id, token);
+                    const clientRes = await clientService.getclientByAccountId(id, token);
+                    let boolCreditTerm = false;
+                    if(clientRes.status === 200 || clientRes.status === 201){
+                        if (clientRes.data.data.creditTerm !== 0 && clientRes.data.data.creditTerm !== null) {
+                            boolCreditTerm = true;
+                        }
+                    }
+
                     if (accountRes.status === 200 || accountRes.status === 201) {
                         const account = accountRes.data.data;
                         const role = account.role.id;
 
                         //Guardar data
-                        const userData = { isLoggedIn: true, id: id, token: token, account: account, role: role};
+                        const userData = { isLoggedIn: true, id: id, token: token, account: account, role: role, isExistCreditTerms: boolCreditTerm};
                         localStorage.setItem('user', JSON.stringify(userData));
                         setUser(userData);
 
                         //Redirigir
-                        if (role === 1) {
+                        if (role === 1 && !boolCreditTerm) {
                             console.log('Iniciando sesión como cliente...');
                             navigate('/welcome');
+                        } else if (role === 1 && boolCreditTerm) {
+                            navigate('/client/stores');
                         } else if (role === 2) {
                             navigate('/store');
                         }

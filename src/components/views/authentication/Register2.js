@@ -20,6 +20,7 @@ function Register2({ role, id, token }) {
     const [dni, setDni] = useState('');
     const [phone, setPhone] = useState('');
     const [storeName, setStoreName] = useState('');
+    const [storeImageUrl, setStoreImageUrl] = useState(''); // [storeImage, setStoreImage
     const [ruc, setRuc] = useState('');
 
     const clientService = new ClientService();
@@ -27,7 +28,7 @@ function Register2({ role, id, token }) {
 
     const handleRegisterClient =  async () => {
         const localdate = new Date().toISOString().split('T')[0];
-        const clientReq = new ClientRegisterRequest(name, lastName, dni, phone, 'none', localdate, 'none', state.id);
+        const clientReq = new ClientRegisterRequest(name, lastName, dni, phone, 'none', localdate, 'none', 0, state.id);
 
         try {
             const clientRegister = await clientService.registerClient(clientReq, state.token);
@@ -55,7 +56,7 @@ function Register2({ role, id, token }) {
     }
      
     const handleRegisterStore = async () => {
-        const storeReq = new StoreRegisterRequest(name, lastName, phone, dni, ruc, storeName, state.id);
+        const storeReq = new StoreRegisterRequest(name, lastName, phone, dni, ruc, storeName, storeImageUrl, state.id);
 
         try {
             const storeRegister = await storeService.registerStore(storeReq, state.token);
@@ -136,6 +137,15 @@ function Register2({ role, id, token }) {
                             inputMode={'text'}
                             value={storeName}
                             onChange={e => setStoreName(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-group-register">
+                        <TextInput
+                            type={'text'}
+                            placeholder="Url de imagen de la tienda"
+                            inputMode={'text'}
+                            value={storeImageUrl}
+                            onChange={e => setStoreImageUrl(e.target.value)}
                         />
                     </div>
                     <div className="form-group-register">
