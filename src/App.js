@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from 'react-router-dom';
 import Auth from './components/views/authentication/Auth';
 import Welcome from './components/views/configuration/Welcome';
 import ClientHomeView from './components/views/home/ClientHomeView';
@@ -32,6 +32,8 @@ function App() {
       );
   };
 
+
+
   return (
       <Router>
           <AnimatePresence 
@@ -44,6 +46,7 @@ function App() {
                   <Route path="/welcome" element={<PrivateRoute element={Welcome} isLoggedIn={user.isLoggedIn} allowedType={1} />} />
                   <Route path="/client/*" element={<PrivateRoute element={ClientHomeView} isLoggedIn={user.isLoggedIn} allowedType={1} />} />
                   <Route path="/store/*" element={<PrivateRoute element={StoreHomeView} isLoggedIn={user.isLoggedIn} allowedType={2} />} />
+                  <Route path="*" element={<Navigate to="/auth" />} />
               </Routes>
           </AnimatePresence>
       </Router>

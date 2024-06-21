@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles/Form.css';
 import { TextInput, RadioButton, CustomLink } from "../../elements/Elements";
 import { motion } from "framer-motion";
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../../service/AuthService';
 import RegisterAccountRequest from '../../../model/dto/request/RegisterAccountRequest';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 
 function Register1() {
     const [email, setEmail] = useState('');
@@ -13,6 +15,8 @@ function Register1() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [userChecked, setUserChecked] = useState('client');
     const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
 
     const authenticationService = new AuthService();
@@ -101,23 +105,57 @@ function Register1() {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
-                <div className="form-group-register">
+                <div className="form-group-register" style={{ position: 'relative' }}>
                     <TextInput
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         placeholder="Contraseña"
                         inputMode="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                            position: 'absolute',
+                            right: '15px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            padding: 0,
+                            color: 'white'
+                        }}
+                    >
+                        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                    </button>
                 </div>
-                <div className="form-group-register">
+                <div className="form-group-register" style={{ position: 'relative' }}>
                     <TextInput
-                        type="password"
+                        type={showConfirmPassword ? 'text' : 'password'}
                         placeholder="Repetir contraseña"
                         inputMode="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
+                    <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        style={{
+                            position: 'absolute',
+                            right: '15px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            padding: 0,
+                            color: 'white'
+                        }}
+                    >
+                        <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
+                    </button>
                 </div>
                 {error && <div className="error-message">{error}</div>}
                 <CustomLink text="Siguiente >" href="#" handleClick={handleRegister} alignment="end" />

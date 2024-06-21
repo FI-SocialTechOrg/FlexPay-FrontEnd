@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { TextInput, Button, CustomLink } from '../../elements/Elements';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import { FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import LoginRequest from '../../../model/dto/request/LoginRequest';
 import AuthService from '../../../service/AuthService';
 import AccountService from '../../../service/AccountService';
@@ -24,6 +26,7 @@ function LogIn({ setUser }) {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const authenticationService = new AuthService();
     const accountService = new AccountService();
@@ -93,11 +96,11 @@ function LogIn({ setUser }) {
                 </div>
 
                 <div className="column">
-                    <p className="textinput-title">Email</p>
+                    <p className="textinput-title">Correo o nombre de usuario</p>
                     <div className="form-group-login">
                         <TextInput
                             type={'text'}
-                            placeholder={'Ingrese su correo electrónico'}
+                            placeholder={'Ingrese su email o nombre de usuario'}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
@@ -106,13 +109,30 @@ function LogIn({ setUser }) {
 
                 <div className="column">
                     <p className="textinput-title">Contraseña</p>
-                    <div className="form-group-login">
+                    <div className="form-group-login" style={{ position: 'relative' }}>
                         <TextInput
-                            type={'password'}
+                            type={showPassword ? 'text' : 'password'}
                             placeholder={'Ingrese su contraseña'}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            style={{
+                                position: 'absolute',
+                                right: '15px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                padding: 0,
+                                color: 'white'
+                            }}
+                        >
+                            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                        </button>
                     </div>
                 </div>
 
