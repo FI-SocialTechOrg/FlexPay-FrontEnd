@@ -6,10 +6,50 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faBars } from '@fortawesome/free-solid-svg-icons'; // Icono de carrito de compras
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import ClientService from '../../service/ClientService';
+import StoreService from '../../service/StoreService';
 
 function Navbar() {
-    const name = 'Carlos';
-    const storeName = 'Minimarket Vega';
+    const [name, setName] = useState('');
+    const clientService = new ClientService();
+    const getClienttData = async () => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const id = user.id;
+        const token = user.token;
+        try {
+            const accountRes = await clientService.getclientByAccountId(id, token);
+            console.log(accountRes); 
+            if(accountRes.status === 200 || accountRes.status === 201){
+                const firstName = accountRes.data.data.firstName;
+                setName(firstName);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    const [storeName, setStoreName] = useState('');
+    const storeService = new StoreService();
+    const getStoreData = async () => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const storeId = user.id;
+        const token = user.token;
+        try {
+            const storeRes = await storeService.getStoreByAccountId(storeId, token);
+            console.log(storeRes); 
+            if(storeRes.status === 200 || storeRes.status === 201){
+                const name = storeRes.data.data.companyName;
+                setStoreName(name);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+    }
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -24,12 +64,19 @@ function Navbar() {
                 setMenuOpen(false);
             }
         }
-
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [menuRef]);
+
+    useEffect(() => {
+        if (isUserClient) {
+            getClienttData();
+        } else {
+            getStoreData();
+        }
+    });
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);

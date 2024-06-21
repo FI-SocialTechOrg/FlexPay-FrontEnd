@@ -1,13 +1,190 @@
 import './styles/Form.css'
 import { motion } from "framer-motion";
 import {TextInput, Button, CustomLink} from "../../elements/Elements";
-import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import ClientService from '../../../service/ClientService';
+import ClientRegisterRequest from '../../../model/dto/request/ClientRegisterRequest';
+import StoreRegisterRequest from '../../../model/dto/request/StoreRegisterRequest';
+import StoreService from '../../../service/StoreService';
 
-function Register2() {
+function Register2({ role, id, token }) {
+
     const navigate = useNavigate();
-    const handleClick = () => {
-        console.log('Iniciando sesión...');
-       navigate('/welcome');
+    const location = useLocation();
+    const { state } = location;
+
+    const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [dni, setDni] = useState('');
+    const [phone, setPhone] = useState('');
+    const [storeName, setStoreName] = useState('');
+    const [ruc, setRuc] = useState('');
+
+    const clientService = new ClientService();
+    const storeService = new StoreService();
+
+    const handleRegisterClient =  async () => {
+        const localdate = new Date().toISOString().split('T')[0];
+        const clientReq = new ClientRegisterRequest(name, lastName, dni, phone, 'none', localdate, 'none', state.id);
+
+        try {
+            const clientRegister = await clientService.registerClient(clientReq, state.token);
+
+            if(clientRegister.status === 200 || clientRegister.status === 201) {
+                console.log('Cliente registrado correctamente');
+                toast.success("Cuenta creada exitosamente", {
+                    position: "top-center",
+                    style: { background: '#FFFFFF', color: '#000000' }, 
+                    autoClose: 1000,
+                });
+                setTimeout(() => {
+                    navigate('/auth/login');
+                }, 2000);
+            }
+            else {
+                console.log('Error durante el registro');
+                console.log('Error:', clientRegister);
+                navigate('/register/1');
+            }
+        }
+        catch (error) {
+            console.log('Error durante el registro:', error);
+        }
+    }
+     
+    const handleRegisterStore = async () => {
+        const storeReq = new StoreRegisterRequest(name, lastName, phone, dni, ruc, storeName, state.id);
+
+        try {
+            const storeRegister = await storeService.registerStore(storeReq, state.token);
+
+            if(storeRegister.status === 200 || storeRegister.status === 201) {
+                console.log('Tienda registrada correctamente');
+                toast.success("Cuenta creada exitosamente", {
+                    position: "top-center",
+                    style: { background: '#FFFFFF', color: '#000000' }, 
+                    autoClose: 1000,
+                });
+                setTimeout(() => {
+                    navigate('/auth/login');
+                }, 2000);
+            }
+            else {
+                console.log('Error durante el registro');
+                console.log('Error:', storeRegister);
+                navigate('/register/1');
+            }
+        } catch (error) {
+            console.log('Error durante el registro:', error);
+        }
+
+        navigate('/auth/login');
+    }
+
+    function renderFormFields() {
+        if (state && state.role === 1) {
+            return (
+                <>
+                        <div className="form-group-register">
+                            <TextInput
+                                type={'text'}
+                                placeholder={'Nombre'}
+                                inputMode={'text'}
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                        </div>
+                        <div className="form-group-register">
+                            <TextInput
+                                type={'text'}
+                                placeholder={'Apellido'}
+                                inputMode={'text'}
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                            />
+                        </div>
+                        <div className="form-group-register">
+                            <TextInput
+                                type={'number'}
+                                placeholder={'DNI'}
+                                inputMode={'numeric'}
+                                value={dni}
+                                onChange={(e) => setDni(e.target.value)}
+                            />
+                        </div>
+                        <div className="form-group-register">
+                            <TextInput
+                                type={'number'}
+                                placeholder={'Celular'}
+                                inputMode={'numeric'}
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                            />
+                        </div>
+                        <Button text = {'Registrarse'} alignment = {'center'} onClick={handleRegisterClient}/>
+                    </>    
+            );
+        } else if (state && state.role === 2) {
+            return (
+                <>
+                    <div className="form-group-register">
+                        <TextInput
+                            type={'text'}
+                            placeholder="Nombre de la tienda"
+                            inputMode={'text'}
+                            value={storeName}
+                            onChange={e => setStoreName(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-group-register">
+                        <TextInput
+                            type="number"
+                            placeholder="RUC"
+                            inputMode={'numeric'}
+                            value= {ruc}
+                            onChange= {e => setRuc(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-group-register">
+                        <TextInput
+                            type={'text'}
+                            placeholder="Nombre del propietario"
+                            inputMode={'text'}
+                            value= {name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-group-register">
+                        <TextInput
+                            type={'text'}
+                            placeholder="Apellido del propietario"
+                            inputMode={'text'}
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                        />
+                    </div>
+                    <div className="form-group-row">
+                        <TextInput
+                            type={'number'}
+                            placeholder="DNI"
+                            inputMode={'numeric'}
+                            value={dni}
+                            onChange={(e) => setDni(e.target.value)}
+                        />
+                        <TextInput
+                            type={'number'}
+                            placeholder="Celular"
+                            inputMode={'numeric'}
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                        />
+                    </div>
+                    <Button text = {'Registrarse'} alignment = {'center'} onClick={handleRegisterStore}/>
+                </>
+            );
+        }
     }
 
     return (
@@ -18,7 +195,8 @@ function Register2() {
             transition={{ duration: 0.5, delay: 0}}
             style={{display: 'flex', width: '100%'}}
         >
-                    <form className = "form">
+              <ToastContainer/>
+                    <div className = "form">
                         <div className = "title-container">
                             <h1 className = "form-title">
                                 Crea una cuenta
@@ -30,36 +208,10 @@ function Register2() {
                             <p className="text">¡Estás a un paso de ser parte de FlexPay!</p>
                         </div>
 
-                        <div className = "form-group-register">
-                            <TextInput
-                                type = {'text'}
-                                placeholder = {'Correo electrónico'}
-                                inputMode={'email'}
-                            />
+                        <div className='render-form'>
+                            {renderFormFields()}
                         </div>
-                        <div className = "form-group-register">
-                            <TextInput
-                                type = {'text'}
-                                placeholder = {'Usuario'}
-                                inputMode={'text'}
-                            />
-                        </div>
-                        <div className = "form-group-register">
-                            <TextInput
-                                type = {'password'}
-                                placeholder = {'Contraseña'}
-                                inputMode={'text'}
-                            />
-                        </div>
-                        <div className = "form-group-register">
-                            <TextInput
-                                type = {'password'}
-                                placeholder = {'Repetir contraseña'}
-                                inputMode={'text'}
-                            />
-                        </div>
-                        <Button text = {'Registrarse'} alignment = {'center'} onClick={handleClick}/>
-                    </form>
+                    </div>
         </motion.div>
     )
 }
