@@ -85,6 +85,21 @@
     padding: 0;
 }
 
+.confirm-button {
+    background-color: #1983ff;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-button:hover {
+    background-color: #1f6fcb;
+}
+
 @media screen and (max-width: 800px){
    
     .welcome-left-container{

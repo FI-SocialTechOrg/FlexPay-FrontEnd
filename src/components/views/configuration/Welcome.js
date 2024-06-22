@@ -6,10 +6,11 @@ import logo from '../../assets/flexpay_logo.png';
 import calendar from '../../assets/calendar.png';
 import { RedirectButton, DropDownLight } from '../../elements/Elements';
 import ClientService from '../../../service/ClientService';
+import ClientRegisterRequest from "../../../model/dto/request/ClientRegisterRequest";
 
 function Welcome() {
     const [name, setName] = useState('');
-
+    const [clientData, setClientData] = useState(null);
     const clientService = new ClientService();
 
     const getAccountData = async () => {
@@ -21,8 +22,8 @@ function Welcome() {
             const accountRes = await clientService.getclientByAccountId(id, token);
             console.log(accountRes); 
             if(accountRes.status === 200 || accountRes.status === 201){
-                const firstName = accountRes.data.data.firstName;
-                setName(firstName);
+                setClientData(accountRes.data.data);
+                setName(accountRes.data.data.firstName);
             }
         }
         catch (error) {
@@ -47,9 +48,34 @@ function Welcome() {
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleChange = (event) => {
-        setSelectedOption(event.target.value);
+        setSelectedOption(parseInt(event.target.value, 10));
         console.log("Fecha seleccionada: " + event.target.value);
+        console.log('Mira el clientData:', clientData);
     };
+
+    const handleConfirm = async () => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const id = user.id;
+        const token = user.token;
+
+        const clientReq = new ClientRegisterRequest(clientData.firstName, clientData.lastName, clientData.dni,
+            clientData.phone, clientData.gender, clientData.birthday, clientData.photoUrl, selectedOption, clientData.account.id);
+        console.log('Observa:', clientReq);
+
+        try {
+            const updateRes = await clientService.updateClient(clientData.id, token, clientReq);
+            if (updateRes.status === 200 || updateRes.status === 201) {
+                console.log('Término de crédito actualizado exitosamente.');
+            }
+        } catch (error) {
+            console.log('Error al actualizar el término de crédito:', error);
+        }
+    }
+
+    if (!clientData) {
+        return null;  // O manejar una carga inicial
+    }
     
     return (
         <motion.div
@@ -80,7 +106,8 @@ function Welcome() {
                             <p>Recuerda que no podrás modificarla más adelante.</p>
                         </div>
                         <DropDownLight options={options} onChange={handleChange} />
-                        <RedirectButton text={'Confirmar'} href={'/client/stores'} />
+                        <button className="confirm-button" onClick={handleConfirm}>Confirmar</button>
+                        <RedirectButton text={'Siguiente'} href={'/client/stores'} />
                     </div>
                 </div>
             </div>

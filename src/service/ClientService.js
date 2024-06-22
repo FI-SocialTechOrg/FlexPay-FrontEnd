@@ -46,6 +46,22 @@ class ClientService {
             throw new Error('Error getting client: ' + error);
         }
     }
+
+    async updateClient(id, token, ClientUpdateRequest) {
+        console.log('Actualizando cliente...');
+        console.log('Token enviado:', token);
+        try {
+            const response = await axios.put(`${config.API_URL}/FlexPay/customer/${id}`, ClientUpdateRequest, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            return response;
+        } catch (error) {
+            throw new Error('Error updating client: ' + error);
+        }
+    }
+
 }
 
 export default ClientService;
