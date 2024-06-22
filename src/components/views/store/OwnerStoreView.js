@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast } from 'react-toastify';
 import StoreService from '../../../service/StoreService';
+import ProductStockRequest from '../../../model/dto/request/ProductStockRequest';
+import ProductStockService from "../../../service/ProductStockService";
 
 function OwnerStoreView() {
     const [isEditProductOpen, setIsEditProductOpen] = useState(false);
@@ -13,14 +15,8 @@ function OwnerStoreView() {
     const [storeData, setStoreData] = useState(null);
     const [productStocks, setProductStocks] = useState([]);
     const storeService = new StoreService();
+    const productStockService = new ProductStockService();
 
-
-    const products = [
-        { id: 1, name: 'Plátano de seda x kg', price: 2.69, stock: 50, imageUrl: '' },
-        { id: 2, name: 'Arándanos 500g', price: 13.99, stock: 20, imageUrl: '' },
-        { id: 3, name: 'Atún Campomar', price: 5.90, stock: 26, imageUrl: '' },
-        { id: 4, name: 'Avena Quaker 900g', price: 14.50, stock: 16, imageUrl: '' },
-    ];
 
     useEffect(() => {
         getStoreData();
@@ -49,16 +45,35 @@ function OwnerStoreView() {
         setIsEditProductOpen(true);
     };
 
-    const handleSaveProduct = (updatedProduct) => {
-        console.log('Guardando producto actualizado:', updatedProduct);
-         toast.success("Producto actualizado con éxito", {
-                position: "top-center",
-                style: { background: '#white', color: '#000' },
-                progressStyle: { background: '#53b64f' },
-                autoClose: 1000,
-            });
-        setIsEditProductOpen(false);
-        setSelectedProduct(null);
+    const handleSaveProduct = async (updatedProduct) => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const token = user.token;
+
+        const productStockRequest = new ProductStockRequest(
+            updatedProduct.price,
+            updatedProduct.stock,
+            updatedProduct.productId,
+            updatedProduct.storeId,
+            updatedProduct.stateStockId
+        );
+
+        try {
+            const updateRes = await productStockService.updateProductStock(updatedProduct.id, token, productStockRequest);
+            if (updateRes.status === 200 || updateRes.status === 201) {
+                toast.success("Producto actualizado con éxito", {
+                    position: "top-center",
+                    style: { background: '#white', color: '#000' },
+                    progressStyle: { background: '#53b64f' },
+                    autoClose: 1000,
+                });
+                getStoreData(); // Refrescar la lista de productos
+                setIsEditProductOpen(false);
+                setSelectedProduct(null);
+            }
+        } catch (error) {
+            console.log('Error al actualizar el producto:', error);
+        }
     };
 
     const handleClose = () => {
@@ -94,11 +109,7 @@ function OwnerStoreView() {
 
         {isEditProductOpen && selectedProduct && (
           <EditProduct
-            product_id={selectedProduct.id}
-            product_name={selectedProduct.name}
-            product_price={selectedProduct.price.toString()}
-            product_stock={selectedProduct.stock.toString()}
-            image={selectedProduct.imageUrl}  // Asegúrate de pasar la imagen si la tienes
+            productSelected={selectedProduct}
             onEdit={handleSaveProduct}
             onClose={handleClose}
           />

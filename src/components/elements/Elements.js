@@ -232,6 +232,52 @@ function PaymentDetailsCard ({ remainingAmount, selectedOption, interestRate, in
   );
 };
 
+
+
+
+
+function EditProduct({ product, onEdit, onClose }) {
+    const [price, setPrice] = useState(product.price);
+    const [mountStock, setMountStock] = useState(product.mountStock);
+    const [stateStockId, setStateStockId] = useState(product.stateStock.id);
+
+    const handleSave = () => {
+        const updatedProduct = {
+            price: parseFloat(price),
+            mountStock: parseInt(mountStock, 10),
+            productId: product.product.id,
+            storeId: product.store.id,
+            stateStockId: stateStockId
+        };
+        onEdit(updatedProduct);
+    };
+
+    return (
+        <div className="edit-product-modal">
+            <div className="edit-product-content">
+                <h2>Editar Producto</h2>
+                <label>Precio</label>
+                <input
+                    type="number"
+                    step="0.01"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                />
+                <label>Stock</label>
+                <input
+                    type="number"
+                    value={mountStock}
+                    onChange={(e) => setMountStock(e.target.value)}
+                />
+                <div className="edit-product-buttons">
+                    <Button text="Guardar" alignment="center" onClick={handleSave} />
+                    <Button text="Cancelar" alignment="center" onClick={onClose} />
+                </div>
+            </div>
+        </div>
+    );
+}
+/*
 function EditProduct({ product_id, image, product_name, product_price, product_stock, onEdit, onClose}) {
   const defaultproductimg = require('../assets/no_image_available.jpg');
   const [name, setName] = useState(product_name);
@@ -328,7 +374,7 @@ function EditProduct({ product_id, image, product_name, product_price, product_s
         </motion.div>
     </motion.div>
   );
-}
+}*/
 
 
 export { 

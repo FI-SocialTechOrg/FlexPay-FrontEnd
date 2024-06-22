@@ -1,5 +1,5 @@
 class ClientRegisterRequest {
-    constructor(firstName, lastName, dni, phone, gender, birthday, photoUrl, creditTerm, account) {
+    constructor(firstName, lastName, dni, phone, gender, birthday, photoUrl, creditTerm, accountId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dni = dni;
@@ -8,7 +8,7 @@ class ClientRegisterRequest {
         this.birthday = birthday;
         this.photoUrl = photoUrl;
         this.creditTerm = creditTerm;
-        this.account = account;
+        this.accountId = accountId;
     }
 }
 
