@@ -165,23 +165,23 @@ function ProductCard({ product, onAddToCart }) {
 
 function ProductEditCard({ product, onEdit }) {
   const defaultproductimg = require('../assets/no_image_available.jpg');
-  const { id, name, price, stock, imageUrl } = product;
+  //const { id, name, price, stock, imageUrl } = product;
 
   const handleEditClick = () => {
-    console.log('Editando producto con ID:', id);
+    console.log('Editando producto con ID:', product.id);
     onEdit(product); 
   };
 
   return (
     <div className="product-card">
-        <img src={imageUrl || defaultproductimg} alt={name} className="product-image" />
+        <img src={product.product.image || defaultproductimg} alt={product.product.name} className="product-image" />
         <div className='product-info'>
-        <h3>{name}</h3>
+        <h3>{product.product.name}</h3>
         <div className="card-product-price">
           <p className='product-label'>Precio:</p>
-          <p className='price'>S/ {parseFloat(price).toFixed(2)}</p>
+          <p className='price'>S/ {parseFloat(product.price).toFixed(2)}</p>
         </div>
-        <p className='stock'>Stock: {stock} unidades</p>
+        <p className='stock'>Stock: {product.mountStock} unidades</p>
         <button onClick={handleEditClick}>
           <FontAwesomeIcon icon={faEdit} style={{ paddingRight: '5px' }} />
           Editar

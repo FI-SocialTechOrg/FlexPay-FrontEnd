@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import './styles/Store.css';
 import { ProductEditCard, EditProduct } from '../../elements/Elements';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast } from 'react-toastify';
+import StoreService from '../../../service/StoreService';
 
 function OwnerStoreView() {
     const [isEditProductOpen, setIsEditProductOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [storeData, setStoreData] = useState(null);
+    const [productStocks, setProductStocks] = useState([]);
+    const storeService = new StoreService();
+
 
     const products = [
         { id: 1, name: 'Plátano de seda x kg', price: 2.69, stock: 50, imageUrl: '' },
@@ -16,6 +21,28 @@ function OwnerStoreView() {
         { id: 3, name: 'Atún Campomar', price: 5.90, stock: 26, imageUrl: '' },
         { id: 4, name: 'Avena Quaker 900g', price: 14.50, stock: 16, imageUrl: '' },
     ];
+
+    useEffect(() => {
+        getStoreData();
+    }, []);
+
+    const getStoreData = async () => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const id = user.id;
+        const token = user.token;
+        try {
+            const storeRes = await storeService.getStoreByAccountId(id, token);
+            if(storeRes.status === 200 || storeRes.status === 201){
+                setStoreData(storeRes.data.data);
+                setProductStocks(storeRes.data.data.productStocks)
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
 
     const handleEditProduct = (product) => {
         setSelectedProduct(product);
@@ -60,7 +87,7 @@ function OwnerStoreView() {
           </button>
         </div>
         <div className="product-cards">
-          {products.map(product => (
+          {productStocks.map(product => (
             <ProductEditCard key={product.id} product={product} onEdit={() => handleEditProduct(product)} />
           ))}
         </div>

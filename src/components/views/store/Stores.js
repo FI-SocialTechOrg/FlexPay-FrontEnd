@@ -39,8 +39,7 @@ function Stores() {
                 <h1 className='stores-list-title'>Selecciona tu tienda</h1>
                 <div className="stores-list">
                     {stores.map(store => (
-                        <StoreButton 
-                        key={store.id}
+                        <StoreButton
                         id={store.id}
                         name={store.companyName}
                         logo={store.imageUrl}
