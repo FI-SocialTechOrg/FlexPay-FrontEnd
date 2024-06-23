@@ -57,7 +57,7 @@ function Register2({ role, id, token }) {
      
     const handleRegisterStore = async () => {
         const storeReq = new StoreRegisterRequest(name, lastName, phone, dni, ruc, storeName, storeImageUrl, state.id);
-
+        console.log('storeReq', state.id)
         try {
             const storeRegister = await storeService.registerStore(storeReq, state.token);
 

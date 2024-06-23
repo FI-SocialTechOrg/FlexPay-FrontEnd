@@ -1,5 +1,5 @@
 class StoreRegisterRequest {
-    constructor(firstName, lastName, phone, dni, ruc, companyName, imageUrl, accountId) {
+    constructor(firstName, lastName, phone, dni, ruc, companyName, imageUrl, account) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -7,7 +7,7 @@ class StoreRegisterRequest {
         this.ruc = ruc;
         this.companyName = companyName;
         this.imageUrl = imageUrl;
-        this.accountId = accountId;
+        this.account = account;
     }
 }
 

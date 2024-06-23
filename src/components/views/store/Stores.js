@@ -40,6 +40,7 @@ function Stores() {
                 <div className="stores-list">
                     {stores.map(store => (
                         <StoreButton
+                        key={store.id}
                         id={store.id}
                         name={store.companyName}
                         logo={store.imageUrl}

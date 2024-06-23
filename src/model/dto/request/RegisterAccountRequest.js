@@ -1,9 +1,9 @@
 class RegisterAccountRequest {
-    constructor(userName, email, password, roleId) {
+    constructor(userName, email, password, role) {
       this.userName = userName;
       this.email = email;
       this.password = password;
-      this.role = roleId;
+      this.role = role;
     }
   }
   
