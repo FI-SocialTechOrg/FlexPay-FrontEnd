@@ -53,9 +53,9 @@ function OwnerStoreView() {
         const productStockRequest = new ProductStockRequest(
             updatedProduct.price,
             updatedProduct.stock,
-            updatedProduct.productId,
-            updatedProduct.storeId,
-            updatedProduct.stateStockId
+            updatedProduct.product,
+            updatedProduct.store,
+            updatedProduct.stateStock
         );
 
         try {

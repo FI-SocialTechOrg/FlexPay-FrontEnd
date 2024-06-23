@@ -28,6 +28,19 @@ class StoreService {
         }
     }
 
+    async getStoreById(id, token){
+        try{
+            const response = await axios.get(`${config.API_URL}/FlexPay/store/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            return response;
+        } catch (error) {
+            throw new Error('Error getting store: ' + error);
+        }
+    }
+
     async getStores(token){
         try {
             const response = await axios.get(`${config.API_URL}/FlexPay/store`, {
