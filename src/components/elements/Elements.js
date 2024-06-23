@@ -47,12 +47,13 @@ function Button({ text, alignment, onClick, disabled, width}) {
     > {text} </button>);
 }
 
-function RedirectButton({ text, href, width, disabled }) {
+function RedirectButton({ text, href, width, onClick }) {
   return (
     <Link 
       className="colored-button" 
       style={{width: width}}
       to={href}
+      onClick={onClick}
     > 
       {text} 
     </Link>
