@@ -7,11 +7,13 @@ import calendar from '../../assets/calendar.png';
 import { RedirectButton, DropDownLight } from '../../elements/Elements';
 import ClientService from '../../../service/ClientService';
 import ClientRegisterRequest from "../../../model/dto/request/ClientRegisterRequest";
+import {useNavigate} from "react-router-dom";
 
 function Welcome() {
     const [name, setName] = useState('');
     const [clientData, setClientData] = useState(null);
     const clientService = new ClientService();
+    const navigate = useNavigate()
 
     const getAccountData = async () => {
         const storedUser = localStorage.getItem('user');
@@ -59,6 +61,7 @@ function Welcome() {
         const id = user.id;
         const token = user.token;
 
+
         const clientReq = new ClientRegisterRequest(clientData.firstName, clientData.lastName, clientData.dni,
             clientData.phone, clientData.gender, clientData.birthday, clientData.photoUrl, selectedOption, clientData.account.id);
         console.log('Observa:', clientReq);
@@ -67,6 +70,7 @@ function Welcome() {
             const updateRes = await clientService.updateClient(clientData.id, token, clientReq);
             if (updateRes.status === 200 || updateRes.status === 201) {
                 console.log('Término de crédito actualizado exitosamente.');
+                navigate('/client/stores');
             }
         } catch (error) {
             console.log('Error al actualizar el término de crédito:', error);
@@ -106,8 +110,7 @@ function Welcome() {
                             <p>Recuerda que no podrás modificarla más adelante.</p>
                         </div>
                         <DropDownLight options={options} onChange={handleChange} />
-                        <button className="confirm-button" onClick={handleConfirm}>Confirmar</button>
-                        <RedirectButton text={'Siguiente'} href={'/client/stores'} />
+                        <RedirectButton onClick={handleConfirm} text={'Siguiente'} />
                     </div>
                 </div>
             </div>
