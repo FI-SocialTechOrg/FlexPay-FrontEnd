@@ -109,6 +109,12 @@ function OwnerStoreView() {
                 setIsCreatingProduct(false);
             }
         } catch (error) {
+            toast.error("El producto no se pudo agregar porque ya existe en el stock de esta tienda", {
+                position: "top-center",
+                style: { background: '#white', color: '#000' },
+                progressStyle: { background: '#e74c3c' },
+                autoClose: 1000,
+            });
             console.log('Error al crear el producto:', error);
         }
     };

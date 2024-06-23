@@ -364,39 +364,50 @@ function AddProduct({ idStore, onSave, onClose }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, delay: 0 }}
-            className='layer'>
+            className='layer'
+        >
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3, delay: 0.2 }}
-                className='edit-product-card'>
-                <form className='edit-form'>
-                    <FontAwesomeIcon icon={faClose} className='cancel-icon' onClick={handleClose} />
+                className='edit-product-card2'
+            >
+                <form className='edit-form2'>
+                    <FontAwesomeIcon
+                        icon={faClose}
+                        className='cancel-icon'
+                        onClick={handleClose}
+                    />
                     <div className='edit-group'>
                         <p className='edit-label'>Producto:</p>
                         <select
                             value={selectedProduct}
                             onChange={handleChangeProduct}
                             className='select-input'
-                            maxWidth='100%'
                         >
-                            <option value='' disabled>Seleccione un producto</option>
-                            {products.map(product => (
-                                <option key={product.id} value={product.id}>{product.name}</option>
+                            <option value='' disabled>
+                                Seleccione un producto
+                            </option>
+                            {products.map((product) => (
+                                <option key={product.id} value={product.id}>
+                                    {product.name}
+                                </option>
                             ))}
                         </select>
                     </div>
                     <div className='edit-group'>
                         <p className='edit-label'>Precio:</p>
-                        <p className='edit-label'>S/</p>
-                        <TextInputLight
-                            type='text'
-                            placeholder='Precio'
-                            value={price}
-                            maxWidth='30%'
-                            onChange={handleChangePrice}
-                        />
+                        <div className='price-input-group'>
+                            <p className='currency-symbol'>S/</p>
+                            <TextInputLight
+                                type='text'
+                                placeholder='Precio'
+                                value={price}
+                                onChange={handleChangePrice}
+                                className='price-input'
+                            />
+                        </div>
                     </div>
                     <div className='edit-group'>
                         <p className='edit-label'>Stock:</p>
@@ -404,12 +415,17 @@ function AddProduct({ idStore, onSave, onClose }) {
                             type='text'
                             placeholder='Stock'
                             value={stock}
-                            maxWidth='20%'
                             onChange={handleChangeStock}
+                            className='stock-input'
                         />
-                        <p className='edit-label'>unidades</p>
+                        <p className='units-label'>unidades</p>
                     </div>
-                    <Button text='Guardar' alignment='center' onClick={handleSave} width='100%' />
+                    <Button
+                        text='Guardar'
+                        alignment='center'
+                        onClick={handleSave}
+                        className='save-button'
+                    />
                 </form>
             </motion.div>
         </motion.div>
