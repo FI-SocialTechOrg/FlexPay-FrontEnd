@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import './styles/Store.css';
-import { ProductEditCard, EditProduct } from '../../elements/Elements';
+import {ProductEditCard, EditProduct, AddProduct} from '../../elements/Elements';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast } from 'react-toastify';
@@ -14,6 +14,7 @@ function OwnerStoreView() {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [storeData, setStoreData] = useState(null);
     const [productStocks, setProductStocks] = useState([]);
+    const [isCreatingProduct, setIsCreatingProduct] = useState(false);
     const storeService = new StoreService();
     const productStockService = new ProductStockService();
 
@@ -72,16 +73,56 @@ function OwnerStoreView() {
                 getStoreData(); // Refrescar la lista de productos
                 setIsEditProductOpen(false);
                 setSelectedProduct(null);
+                setIsCreatingProduct(false);
             }
         } catch (error) {
             console.log('Error al actualizar el producto:', error);
         }
     };
 
+    const handleCreateProduct = async (newProduct) => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const token = user.token;
+
+        const productStockRequest = new ProductStockRequest(
+            newProduct.price,
+            newProduct.mountStock,
+            newProduct.product,
+            newProduct.store,
+            newProduct.stateStock
+        );
+
+        console.log('Producto a crear:', productStockRequest);
+        try {
+            const createRes = await productStockService.createProductStock(productStockRequest, token);
+            if (createRes.status === 200 || createRes.status === 201) {
+                toast.success("Producto creado con éxito", {
+                    position: "top-center",
+                    style: { background: '#white', color: '#000' },
+                    progressStyle: { background: '#53b64f' },
+                    autoClose: 1000,
+                });
+                getStoreData(); // Refrescar la lista de productos
+                setIsEditProductOpen(false);
+                setSelectedProduct(null);
+                setIsCreatingProduct(false);
+            }
+        } catch (error) {
+            console.log('Error al crear el producto:', error);
+        }
+    };
+
+    const handleAddProduct = () => {
+        setSelectedProduct(null);
+        setIsCreatingProduct(true);
+    };
+
     const handleClose = () => {
         console.log('Cerrando edición de producto');
         setIsEditProductOpen(false);
         setSelectedProduct(null);
+        setIsCreatingProduct(false);
       };
 
   return (
@@ -95,11 +136,11 @@ function OwnerStoreView() {
       <div className='store-container'>
         <div className="top-row small-center">
           <h1 className='store-container-title'>Productos</h1>
-          <button className='store-add-button'>
+          <button className='store-add-button' onClick={handleAddProduct}>
             <FontAwesomeIcon icon={faPlusCircle} style={{ paddingRight: '5px' }} />
             Agregar producto
           </button>
-          <button className="store-fixed-add-button">
+          <button className="store-fixed-add-button" onClick={handleAddProduct}>
             <FontAwesomeIcon icon={faPlus} />
           </button>
         </div>
@@ -118,6 +159,13 @@ function OwnerStoreView() {
           />
         )}
 
+        {isCreatingProduct && (
+          <AddProduct
+              idStore={storeData.id}
+              onSave={handleCreateProduct}
+              onClose={handleClose}
+          />
+        )}
       </div>
     </motion.div>
   );

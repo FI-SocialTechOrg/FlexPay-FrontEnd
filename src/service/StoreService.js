@@ -43,7 +43,7 @@ class StoreService {
 
     async getStores(token){
         try {
-            const response = await axios.get(`${config.API_URL}/FlexPay/store`, {
+            const response = await axios.get(`${config.API_URL}/FlexPay/stores`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
