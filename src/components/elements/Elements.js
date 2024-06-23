@@ -235,32 +235,25 @@ function PaymentDetailsCard ({ remainingAmount, selectedOption, interestRate, in
 
 
 
-function EditProduct({ product_id, image, product_name, product_price, product_stock, onEdit, onClose}) {
-  const defaultproductimg = require('../assets/no_image_available.jpg');
-  const [name, setName] = useState(product_name);
-  const [price, setPrice] = useState(product_price);
-  const [stock, setStock] = useState(product_stock);
+function EditProduct({ productSelected, idStore, onEdit, onClose}) {
+  const [price, setPrice] = useState(productSelected.price);
+  const [stock, setStock] = useState(productSelected.mountStock);
+
 
   const handleEdit = (e) => {
     e.preventDefault();
-    console.log('ID del producto:', product_id);
-    console.log('Nombre del producto:', name);
-    console.log('Precio:', price);
-    console.log('Stock:', stock);
 
     const updatedProduct = {
-      id: product_id,
-      name: name,
+      id: productSelected.id,
       price: parseFloat(price),
-      stock: parseInt(stock),
-      imageUrl: image || defaultproductimg  
+      mountStock: parseInt(stock),
+      product:productSelected.product.id,
+      store: idStore,
+      stateStock: productSelected.stateStock.id,
+
     };
 
     onEdit(updatedProduct);
-  };
-
-  const handleChangeName = (e) => {
-    setName(e.target.value);
   };
 
   const handleChangePrice = (e) => {
@@ -291,17 +284,6 @@ function EditProduct({ product_id, image, product_name, product_price, product_s
         >
           <form className='edit-form'>
             <FontAwesomeIcon icon={faClose} className='cancel-icon' onClick={handleClose} />
-            <img src={image || defaultproductimg} alt={name} className="product-edit-image" />
-
-            <div className='edit-group'>
-              <TextInputLight
-                type='text'
-                placeholder='Nombre del producto'
-                value={name}
-                maxWidth='100%'
-                onChange={handleChangeName}
-              />
-            </div>
             <div className='edit-group'>
               <p className='edit-label'>Precio:</p>
               <p className='edit-label'>S/</p>

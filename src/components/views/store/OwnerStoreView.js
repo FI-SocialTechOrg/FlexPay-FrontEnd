@@ -52,14 +52,16 @@ function OwnerStoreView() {
 
         const productStockRequest = new ProductStockRequest(
             updatedProduct.price,
-            updatedProduct.stock,
+            updatedProduct.mountStock,
             updatedProduct.product,
             updatedProduct.store,
             updatedProduct.stateStock
         );
 
+        console.log('id y token:', updatedProduct.id, token);
+        console.log('Producto actualizado:', productStockRequest);
         try {
-            const updateRes = await productStockService.updateProductStock(updatedProduct.id, token, productStockRequest);
+            const updateRes = await productStockService.updateProductStock(updatedProduct.id, productStockRequest, token);
             if (updateRes.status === 200 || updateRes.status === 201) {
                 toast.success("Producto actualizado con éxito", {
                     position: "top-center",
@@ -110,6 +112,7 @@ function OwnerStoreView() {
         {isEditProductOpen && selectedProduct && (
           <EditProduct
             productSelected={selectedProduct}
+            idStore={storeData.id}
             onEdit={handleSaveProduct}
             onClose={handleClose}
           />
