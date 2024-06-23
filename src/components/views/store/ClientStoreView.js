@@ -34,6 +34,15 @@ function ClientStoreView() {
 
     const handleAddToCart = (productId) => {
         console.log('Producto agregado al carrito con ID:', productId);
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingProduct = cart.find(item => item.id === productId);
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+        } else {
+            cart.push({ id: productId, quantity: 1 });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
     };
 
     return (

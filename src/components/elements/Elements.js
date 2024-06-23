@@ -195,7 +195,7 @@ function ProductEditCard({ product, onEdit }) {
 function CartItem({ product, onIncrease, onDecrease, onRemove }) {
   return (
       <div className="cart-item">
-          <span className="product-name">{product.name}</span>
+          <span className="product-name">{product.product.name}</span>
           <div className="quantity-control">
               <button className="quantity-button" onClick={() => onDecrease(product.id)}>
                   -
