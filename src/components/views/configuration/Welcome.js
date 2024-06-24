@@ -58,7 +58,6 @@ function Welcome() {
     const handleConfirm = async () => {
         const storedUser = localStorage.getItem('user');
         const user = JSON.parse(storedUser);
-        const id = user.id;
         const token = user.token;
 
 
