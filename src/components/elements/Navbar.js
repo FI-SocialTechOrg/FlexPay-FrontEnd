@@ -92,6 +92,7 @@ function Navbar() {
 
     const handleLogout = () => {
         localStorage.removeItem('user');
+        localStorage.removeItem('cart');
     }
 
     const handleCartClick = () => {

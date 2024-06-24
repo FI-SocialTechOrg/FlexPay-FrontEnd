@@ -58,9 +58,7 @@ function Welcome() {
     const handleConfirm = async () => {
         const storedUser = localStorage.getItem('user');
         const user = JSON.parse(storedUser);
-        const id = user.id;
         const token = user.token;
-
 
         const clientReq = new ClientRegisterRequest(clientData.firstName, clientData.lastName, clientData.dni,
             clientData.phone, clientData.gender, clientData.birthday, clientData.photoUrl, selectedOption, clientData.account.id);

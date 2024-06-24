@@ -1,16 +1,11 @@
 import React from 'react';
 import logo from '../assets/flexpay_logo.png';
 import './styles/Navbar.css';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 function Navbar404() {
-
-    const location = useLocation();
     const navigate = useNavigate();
-
-    const isUserClient = location.pathname.includes('/client');
-
 
     const handleLogoClick = () => {
         const storedUser = localStorage.getItem('user');

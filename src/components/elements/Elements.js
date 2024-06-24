@@ -8,7 +8,6 @@ import '../assets/store_icon.png';
 import '../assets/no_image_available.jpg';
 import ProductService from '../../service/ProductService';
 import ProductRequest from "../../model/dto/request/ProductRequest";
-//import ProductStockRequest from "../../model/dto/request/ProductStockRequest";
 
 function TextInput({ type, placeholder, inputMode, value, onChange, max, maxWidth, maxHeight }) {
   return (
@@ -178,7 +177,6 @@ function ProductCard({ product, onAddToCart, storeId }) {
 
 function ProductEditCard({ product, onEdit }) {
   const defaultproductimg = require('../assets/no_image_available.jpg');
-  //const { id, name, price, stock, imageUrl } = product;
 
   const handleEditClick = () => {
     console.log('Editando producto con ID:', product.id);
