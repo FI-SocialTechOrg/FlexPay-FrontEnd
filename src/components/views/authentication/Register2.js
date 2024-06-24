@@ -12,6 +12,10 @@ import CreditConfigurationService from '../../../service/CreditConfigurationServ
 import InterestService from '../../../service/InterestService';
 import CreditConfigurationRequest from '../../../model/dto/request/CreditConfigurationRequest';
 import InterestRequest from '../../../model/dto/request/InterestRequest';
+import CreditCardRequest from "../../../model/dto/request/CreditCardRequest";
+import ShoppingCartRequest from "../../../model/dto/request/ShoppingCartRequest";
+import CreditCardService from "../../../service/CreditCardService";
+import ShoppingCartService from "../../../service/ShoppingCartService";
 
 function Register2({ role, id, token }) {
 
@@ -31,6 +35,8 @@ function Register2({ role, id, token }) {
     const storeService = new StoreService();
     const storeConfigurationService = new CreditConfigurationService();
     const interestService = new InterestService();
+    const creditCardService = new CreditCardService();
+    const shoppingCartService = new ShoppingCartService();
 
     const handleRegisterClient =  async () => {
         const localdate = new Date().toISOString().split('T')[0];
@@ -38,8 +44,8 @@ function Register2({ role, id, token }) {
 
         try {
             const clientRegister = await clientService.registerClient(clientReq, state.token);
-
             if(clientRegister.status === 200 || clientRegister.status === 201) {
+                createShoppingCart(clientRegister.data.data.id);
                 console.log('Cliente registrado correctamente');
                 toast.success("Cuenta creada exitosamente", {
                     position: "top-center",
@@ -58,6 +64,37 @@ function Register2({ role, id, token }) {
         }
         catch (error) {
             console.log('Error durante el registro:', error);
+        }
+    }
+
+    const createCreditCard = async (ShoppingCartId) => {
+        const creditCardReq = new CreditCardRequest(0, 0, 0, 0, 0, 1, ShoppingCartId);
+        try {
+            const creditCardRes = await creditCardService.createCreditCard(state.token, creditCardReq);
+            if(creditCardRes.status === 200 || creditCardRes.status === 201) {
+                console.log('Tarjeta de crédito creada correctamente');
+            } else {
+                console.log('Error durante la creacion de la tarjeta de credito');
+                console.log('Error:', creditCardRes);
+            }
+        } catch (error) {
+            console.log('Error durante la creacion de la tarjeta de credito:', error);
+        }
+    }
+
+    const createShoppingCart = async (clientId) => {
+        const shoppingCartReq = new ShoppingCartRequest(0, clientId, 1);
+        try {
+            const shoppingCartRes = await shoppingCartService.createShoppingCart(state.token, shoppingCartReq);
+            if(shoppingCartRes.status === 200 || shoppingCartRes.status === 201) {
+                createCreditCard(shoppingCartRes.data.data.id)
+                console.log('Carrito de compras creado correctamente');
+            } else {
+                console.log('Error durante la creacion del carrito de compras');
+                console.log('Error:', shoppingCartRes);
+            }
+        } catch (error) {
+            console.log('Error durante la creacion del carrito de compras:', error);
         }
     }
 
