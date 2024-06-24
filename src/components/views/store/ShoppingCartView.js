@@ -1,49 +1,99 @@
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { Button, CartItem } from '../../elements/Elements';
 import './styles/Store.css';
-import list_icon from '../../assets/list_icon.png'; 
-
-const productsList = [
-    { id: 1, name: 'Plátano de seda x kg', price: 2.69, stock: 50, quantity: 1 },
-    { id: 2, name: 'Arándanos 500g', price: 13.99, stock: 20, quantity: 1 },
-    { id: 3, name: 'Atún Campomar', price: 5.90, stock: 26, quantity: 1 },
-    { id: 4, name: 'Avena Quaker 900g', price: 14.50, stock: 16, quantity: 1 },
-];
+import list_icon from '../../assets/list_icon.png';
+import ProductStockService from "../../../service/ProductStockService";
 
 function ShoppingCartView() {
-    const [products, setProducts] = useState(productsList);
+    const [products, setProducts] = useState([]);
+    const [cart, setCart] = useState([]);
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const currentStoreId = location.pathname.split('/')[3];
+    const productStockService = new ProductStockService();
+
+    useEffect(() => {
+        const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+        setCart(storedCart);
+        if (storedCart.length > 0) {
+            getProducts(storedCart);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const getProducts = async (cart) => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const token = user.token;
+        console.log('Cart:', cart);
+        const productsArray = [];
+        for (let i = 0; i < cart.length; i++) {
+            try {
+                const productRes = await productStockService.getProductById(cart[i].id, token);
+                if (productRes.status === 200 || productRes.status === 201) {
+                    productsArray.push({
+                        ...productRes.data.data,
+                        quantity: cart[i].quantity // Use the quantity from the cart
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        setProducts(productsArray);
+        console.log('Productos:', productsArray);
+    }
 
     const handleIncrease = (id) => {
-        setProducts(products.map(product =>
-            product.id === id && product.quantity < product.stock
-                ? { ...product, quantity: product.quantity + 1 }
-                : product
-        ));
+        setProducts(prevProducts => {
+            const updatedProducts = prevProducts.map(product =>
+                product.id === id && product.quantity < product.mountStock
+                    ? { ...product, quantity: product.quantity + 1 }
+                    : product
+            );
+            updateLocalStorage(updatedProducts);
+            return updatedProducts;
+        });
     };
 
     const handleDecrease = (id) => {
-        setProducts(products.map(product =>
-            product.id === id && product.quantity > 1
-                ? { ...product, quantity: product.quantity - 1 }
-                : product
-        ));
+        setProducts(prevProducts => {
+            const updatedProducts = prevProducts.map(product =>
+                product.id === id && product.quantity > 1
+                    ? { ...product, quantity: product.quantity - 1 }
+                    : product
+            );
+            updateLocalStorage(updatedProducts);
+            return updatedProducts;
+        });
+    };
+
+    // Función auxiliar para actualizar el localStorage
+    const updateLocalStorage = (products) => {
+        const cart = products.map(product => ({
+            id: product.id,
+            quantity: product.quantity
+        }));
+        localStorage.setItem('cart', JSON.stringify(cart));
     };
 
     const handleRemove = (id) => {
-        setProducts(products.filter(product => product.id !== id));
+        const updatedProducts = products.filter(product => product.id !== id);
+        setProducts(updatedProducts);
+
+        const updatedCart = cart.filter(product => product.id !== id);
+        setCart(updatedCart);
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
     };
 
     const handlePaymentRedirect = () => {
         if (acceptedTerms) {
             console.log('Redirigiendo al pago...');
             navigate(`/client/stores/${currentStoreId}/shopping-cart/payment`)
-        } 
+        }
     };
 
     const totalAmount = products.reduce((acc, product) => acc + product.quantity * product.price, 0);

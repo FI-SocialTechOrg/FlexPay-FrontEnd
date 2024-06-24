@@ -1,5 +1,5 @@
 class ProductStockRequest{
-    constructor(price,mountStock, product, store, stateStock){
+    constructor(price, mountStock, product, store, stateStock){
         this.price = price;
         this.mountStock = mountStock;
         this.product = product;

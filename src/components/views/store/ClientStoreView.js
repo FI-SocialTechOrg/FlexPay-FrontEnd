@@ -1,18 +1,49 @@
 import { motion } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import StoreService from '../../../service/StoreService';
 import './styles/Store.css';
 import { ProductCard } from  '../../elements/Elements';
+import { useLocation } from 'react-router-dom';
 
 function ClientStoreView() {
+    const [productStocks, setProductStocks] = useState([]);
+    const storeService = new StoreService();
+    const location = useLocation();
 
-    const products = [
-        { id: 1, name: 'Plátano de seda x kg', price: 2.69, stock: 50, imageUrl: '' },
-        { id: 2, name: 'Arándanos 500g', price: 13.99, stock: 20, imageUrl: '' },
-        { id: 3, name: 'Atún Campomar', price: 5.90, stock: 26, imageUrl: '' },
-        { id: 4, name: 'Avena Quaker 900g', price: 14.50, stock: 16, imageUrl: '' },
-    ];
+    useEffect(() => {
+        getProductStocks();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const getProductStocks = async () => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const parts = location.pathname.split('/');
+        const currentStoreId = parts[parts.length - 1];
+        const token = user.token;
+        try {
+            const storeRes = await storeService.getStoreById(currentStoreId, token);
+            if(storeRes.status === 200 || storeRes.status === 201){
+                setProductStocks(storeRes.data.data.productStocks)
+                console.log(storeRes.data.data.productStocks);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleAddToCart = (productId) => {
         console.log('Producto agregado al carrito con ID:', productId);
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingProduct = cart.find(item => item.id === productId);
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+        } else {
+            cart.push({ id: productId, quantity: 1 });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
     };
 
     return (
@@ -22,17 +53,18 @@ function ClientStoreView() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, delay: 0}}
             style={{display: 'flex', flexDirection: 'column'}}
-        >   
+        >
             <div className='store-container'>
-                <h1 className='store-container-title'>Selecciona los productos</h1> 
+                <h1 className='store-container-title'>Selecciona los productos</h1>
                 <div className="product-cards">
-                    {products.map(product => (
+                    {productStocks.map(product => (
                         <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
                     ))}
                 </div>
             </div>
         </motion.div>
     );
+
 }
 
 export default ClientStoreView;

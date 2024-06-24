@@ -1,11 +1,14 @@
 import './styles/ElementsStyles.css'
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faClose, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'; 
+import {faChevronDown, faClose, faEdit, faPlusCircle, faTrash} from '@fortawesome/free-solid-svg-icons';
 import '../assets/store_icon.png'; 
 import '../assets/no_image_available.jpg';
+import ProductService from '../../service/ProductService';
+import ProductRequest from "../../model/dto/request/ProductRequest";
+import ProductStockRequest from "../../model/dto/request/ProductStockRequest";
 
 function TextInput({ type, placeholder, inputMode, value, onChange, max, maxWidth, maxHeight }) {
   return (
@@ -124,9 +127,9 @@ function DropDownLight({ options, onChange }) {
   );
 }
 
-function DropDownDark({ options, onChange, marginbottom }) {
+function DropDownDark({ options, value, onChange, marginbottom }) {
   return (
-    <select className="dropdown-dark" onChange={onChange} style={{marginBottom: marginbottom || 0}}>
+    <select className="dropdown-dark"  value={value} onChange={onChange} style={{marginBottom: marginbottom || 0}}>
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.text}
@@ -138,7 +141,7 @@ function DropDownDark({ options, onChange, marginbottom }) {
 
 function ProductCard({ product, onAddToCart }) {
   const defaultproductimg = require('../assets/no_image_available.jpg');
-  const { id, name, price, stock, imageUrl } = product;
+  const { id, name, price, mountStock, imageUrl } = product;
   const [addedToCart, setAddedToCart] = useState(false);
 
   const handleAddToCart = () => {
@@ -148,14 +151,14 @@ function ProductCard({ product, onAddToCart }) {
 
   return (
       <div className="product-card">
-          <img src={imageUrl || defaultproductimg} alt={name} className="product-image" />
+          <img src={product.product.image || defaultproductimg} alt={name} className="product-image" />
           <div className='product-info'>
             <h3>{name}</h3>
             <div className="card-product-price">
               <p className='product-label'>Precio:</p>
               <p className='price'>S/ {parseFloat(price).toFixed(2)}</p>
             </div>
-            <p className='stock'>Stock: {stock} unidades</p>
+            <p className='stock'>Stock: {mountStock} unidades</p>
             <button onClick={handleAddToCart} disabled={addedToCart}>
                 {addedToCart ? 'Añadido al carrito' : 'Añadir al carrito'}
             </button>
@@ -195,7 +198,7 @@ function ProductEditCard({ product, onEdit }) {
 function CartItem({ product, onIncrease, onDecrease, onRemove }) {
   return (
       <div className="cart-item">
-          <span className="product-name">{product.name}</span>
+          <span className="product-name">{product.product.name}</span>
           <div className="quantity-control">
               <button className="quantity-button" onClick={() => onDecrease(product.id)}>
                   -
@@ -235,76 +238,25 @@ function PaymentDetailsCard ({ remainingAmount, selectedOption, interestRate, in
 
 
 
+function EditProduct({ productSelected, idStore, onEdit, onClose}) {
+  const [price, setPrice] = useState(productSelected.price);
+  const [stock, setStock] = useState(productSelected.mountStock);
 
-
-function EditProduct({ product, onEdit, onClose }) {
-    const [price, setPrice] = useState(product.price);
-    const [mountStock, setMountStock] = useState(product.mountStock);
-    const [stateStockId, setStateStockId] = useState(product.stateStock.id);
-
-    const handleSave = () => {
-        const updatedProduct = {
-            price: parseFloat(price),
-            mountStock: parseInt(mountStock, 10),
-            productId: product.product.id,
-            storeId: product.store.id,
-            stateStockId: stateStockId
-        };
-        onEdit(updatedProduct);
-    };
-
-    return (
-        <div className="edit-product-modal">
-            <div className="edit-product-content">
-                <h2>Editar Producto</h2>
-                <label>Precio</label>
-                <input
-                    type="number"
-                    step="0.01"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                />
-                <label>Stock</label>
-                <input
-                    type="number"
-                    value={mountStock}
-                    onChange={(e) => setMountStock(e.target.value)}
-                />
-                <div className="edit-product-buttons">
-                    <Button text="Guardar" alignment="center" onClick={handleSave} />
-                    <Button text="Cancelar" alignment="center" onClick={onClose} />
-                </div>
-            </div>
-        </div>
-    );
-}
-/*
-function EditProduct({ product_id, image, product_name, product_price, product_stock, onEdit, onClose}) {
-  const defaultproductimg = require('../assets/no_image_available.jpg');
-  const [name, setName] = useState(product_name);
-  const [price, setPrice] = useState(product_price);
-  const [stock, setStock] = useState(product_stock);
 
   const handleEdit = (e) => {
     e.preventDefault();
-    console.log('ID del producto:', product_id);
-    console.log('Nombre del producto:', name);
-    console.log('Precio:', price);
-    console.log('Stock:', stock);
 
     const updatedProduct = {
-      id: product_id,
-      name: name,
+      id: productSelected.id,
       price: parseFloat(price),
-      stock: parseInt(stock),
-      imageUrl: image || defaultproductimg  
+      mountStock: parseInt(stock),
+      product:productSelected.product.id,
+      store: idStore,
+      stateStock: productSelected.stateStock.id,
+
     };
 
     onEdit(updatedProduct);
-  };
-
-  const handleChangeName = (e) => {
-    setName(e.target.value);
   };
 
   const handleChangePrice = (e) => {
@@ -335,17 +287,6 @@ function EditProduct({ product_id, image, product_name, product_price, product_s
         >
           <form className='edit-form'>
             <FontAwesomeIcon icon={faClose} className='cancel-icon' onClick={handleClose} />
-            <img src={image || defaultproductimg} alt={name} className="product-edit-image" />
-
-            <div className='edit-group'>
-              <TextInputLight
-                type='text'
-                placeholder='Nombre del producto'
-                value={name}
-                maxWidth='100%'
-                onChange={handleChangeName}
-              />
-            </div>
             <div className='edit-group'>
               <p className='edit-label'>Precio:</p>
               <p className='edit-label'>S/</p>
@@ -375,13 +316,239 @@ function EditProduct({ product_id, image, product_name, product_price, product_s
         </motion.div>
     </motion.div>
   );
-}*/
+}
+
+function AddProductStock({ idStore, onSave, onClose }) {
+    const [products, setProducts] = useState([]);
+    const [selectedProduct, setSelectedProduct] = useState('');
+    const [price, setPrice] = useState('');
+    const [stock, setStock] = useState('');
+    const [showAddProductForm, setShowAddProductForm] = useState(false);
+    const productService = new ProductService();
+
+    useEffect(() => {
+        fetchProducts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const fetchProducts = async () => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const token = user.token;
+
+        try {
+            const response = await productService.getProducts(token);
+            if (response.status === 200) {
+                setProducts(response.data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+    };
+
+    const handleSaveProductStock  = (e) => {
+        e.preventDefault();
+        const newProductStock  = {
+            price: parseFloat(price),
+            mountStock: parseInt(stock, 10),
+            product: parseInt(selectedProduct, 10),
+            store: idStore,
+            stateStock: 1
+        };
+        onSave(newProductStock);
+    };
+
+    const handleAddProduct = () => {
+        setShowAddProductForm(true);
+    };
+
+    const handleCloseAddProduct = () => {
+        setShowAddProductForm(false);
+    };
+
+    const handleChangePrice = (e) => setPrice(e.target.value);
+    const handleChangeStock = (e) => setStock(e.target.value);
+    const handleChangeProduct = (e) => setSelectedProduct(e.target.value);
+    const handleClose = () => onClose();
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, delay: 0 }}
+            className='layer'
+        >
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className='edit-product-card2'
+            >
+                <form className='edit-form2'>
+                    <FontAwesomeIcon
+                        icon={faClose}
+                        className='cancel-icon'
+                        onClick={handleClose}
+                    />
+                    <div className='edit-group'>
+                        <p className='edit-label'>Producto:</p>
+                        <select
+                            value={selectedProduct}
+                            onChange={handleChangeProduct}
+                            className='select-input'
+                        >
+                            <option value='' disabled>
+                                Seleccione un producto
+                            </option>
+                            {products.map((product) => (
+                                <option key={product.id} value={product.id}>
+                                    {product.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className='add-product-section'>
+                        <button type="button" className='add-product-button' onClick={handleAddProduct}>
+                            <FontAwesomeIcon icon={faPlusCircle} style={{ paddingRight: '5px' }} />
+                            Agregar producto nuevo
+                        </button>
+                    </div>
+                    <div className='edit-group'>
+                        <p className='edit-label'>Precio:</p>
+                        <div className='price-input-group'>
+                            <p className='currency-symbol'>S/</p>
+                            <TextInputLight
+                                type='text'
+                                placeholder='Precio'
+                                value={price}
+                                onChange={handleChangePrice}
+                                className='price-input'
+                            />
+                        </div>
+                    </div>
+                    <div className='edit-group'>
+                        <p className='edit-label'>Stock:</p>
+                        <TextInputLight
+                            type='text'
+                            placeholder='Stock'
+                            value={stock}
+                            onChange={handleChangeStock}
+                            className='stock-input'
+                        />
+                        <p className='units-label'>unidades</p>
+                    </div>
+                    <Button
+                        text='Guardar'
+                        alignment='center'
+                        onClick={handleSaveProductStock}
+                        className='save-button'
+                    />
+
+                    {showAddProductForm && (
+                     <AddProduct
+                         onClose={handleCloseAddProduct} />
+                    )}
+                </form>
+            </motion.div>
+        </motion.div>
+    );
+}
+
+function AddProduct({onClose}) {
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [image, setImage] = useState('');
+
+    const handleCreateProduct = async () => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const token = user.token;
+        const productRequest = new ProductRequest(name, description, image);
+        const productService = new ProductService();
+        try {
+            const response = await productService.createProduct(productRequest, token);
+            if (response.status === 200 || response.status === 201) {
+                console.log('Producto creado:', response.data.data);
+                handleClose();
+            }
+        } catch (error) {
+            console.error('Error creating product:', error);
+        }
+    }
 
 
-export { 
+    const handleChangeName = (e) => setName(e.target.value);
+    const handleChangeDescription = (e) => setDescription(e.target.value);
+    const handleChangeImage = (e) => setImage(e.target.value);
+    const handleClose = () => onClose();
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, delay: 0 }}
+            className='layer'
+        >
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className='edit-product-card2'
+            >
+                    <FontAwesomeIcon
+                        icon={faClose}
+                        className='cancel-icon'
+                        onClick={handleClose}
+                    />
+                    <div className='edit-group'>
+                        <p className='edit-label'>Nombre:</p>
+                        <TextInputLight
+                            type='text'
+                            placeholder='Nombre'
+                            value={name}
+                            onChange={handleChangeName}
+                            className='price-input'
+                        />
+                    </div>
+                    <div className='edit-group'>
+                        <p className='edit-label'>Descripcion:</p>
+                        <TextInputLight
+                            type='text'
+                            placeholder='Descripcion'
+                            value={description}
+                            onChange={handleChangeDescription}
+                            className='price-input'
+                        />
+                    </div>
+                    <div className='edit-group'>
+                        <p className='edit-label'>Imagen:</p>
+                        <TextInputLight
+                            type='text'
+                            placeholder='Imagen'
+                            value={image}
+                            onChange={handleChangeImage}
+                            className='stock-input'
+                        />
+                    </div>
+                    <Button
+                        text='Guardar'
+                        alignment='center'
+                        onClick={handleCreateProduct}
+                        className='save-button'
+                    />
+            </motion.div>
+        </motion.div>
+    );
+}
+
+export {
   TextInput, 
   TextInputLight,
-  Button, 
+  Button,
   RedirectButton, 
   StoreButton, 
   CustomOptions, 
@@ -393,5 +560,7 @@ export {
   ProductEditCard,
   CartItem,
   PaymentDetailsCard,
-  EditProduct
+  EditProduct,
+  AddProductStock,
+  AddProduct
 };

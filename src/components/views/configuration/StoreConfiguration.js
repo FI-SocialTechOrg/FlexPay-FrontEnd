@@ -3,66 +3,157 @@ import { motion } from 'framer-motion';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/StoreConfiguration.css';
 import { Button, DropDownDark, RadioButton, TextInput, TextInputLight } from '../../elements/Elements';
+import CreditConfigurationService from '../../../service/CreditConfigurationService';
+import InterestService from '../../../service/InterestService';
+import CreditConfigurationRequest from '../../../model/dto/request/CreditConfigurationRequest';
+import { toast } from 'react-toastify';
+import InterestRequest from '../../../model/dto/request/InterestRequest';
 
 function StoreConfiguration() {
+    const storeConfigurationService = new CreditConfigurationService();
+    const interestService = new InterestService();
+    const storedUser = localStorage.getItem('user');
+    
+    const [configId, setConfigId] = useState('');
     const [creditLine, setCreditLine] = useState('');
+    const [maxMonthlyFee, setMaxMonthlyFee] = useState('0');
+    const [singleInterestId, setSingleInterestId] = useState('');
+    const [moratoryInterestId, setMoratoryInterestId] = useState('');
+    const [compensatoryInterestId, setCompensatoryInterestId] = useState('');
+    const [installmentInterestId, setInstallmentInterestId] = useState('');
+    const [installmentMoratoryId, setInstallmentMoratoryId] = useState('');
+    const [installmentCompensatoryId, setInstallmentCompensatoryId] = useState('');
+
+    const user = JSON.parse(storedUser);
+    const id = user.id;
+    const token = user.token;
 
     // Estados para tasas de interés y opciones de capitalización para pago sin cuotas
     const [singlePayOptions, setSinglePayOptions] = useState({
-      interestRate: 0,
-      moratoryRate: 0,
-      compensatoryRate: 0,
-      interestChecked: 'efectiva',
-      moratoryChecked: 'efectiva',
-      compensatoryChecked: 'efectiva',
-      interestPeriod: '',
-      interestCapitalization: '',
-      moratoryPeriod: '',
-      moratoryCapitalization: '',
-      compensatoryPeriod: '',
-      compensatoryCapitalization: '',
-    });
-  
-    // Estados para tasas de interés y opciones de capitalización para pago en cuotas
-    const [installmentPayOptions, setInstallmentPayOptions] = useState({
-      interestRate: 0,
-      moratoryRate: 0,
-      compensatoryRate: 0,
-      interestChecked: 'efectiva',
-      moratoryChecked: 'efectiva',
-      compensatoryChecked: 'efectiva',
-      interestPeriod: '',
-      interestCapitalization: '',
-      moratoryPeriod: '',
-      moratoryCapitalization: '',
-      compensatoryPeriod: '',
-      compensatoryCapitalization: '',
-      gracePeriod: '',
-    });
-  
-    const singleCapitalizationOptions = [
-      { value: 'diaria', text: 'Diaria' },
-      { value: 'mensual', text: 'Mensual' },
-      { value: 'bimestral', text: 'Bimestral' },
-      { value: 'semestral', text: 'Semestral' },
-      { value: 'anual', text: 'Anual' },
-    ];
-  
-    const singlePeriodOptions = [
-      { value: 'mensual', text: 'Mensual' },
-      { value: 'bimestral', text: 'Bimestral' },
-      { value: 'trimestral', text: 'Trimestral' },
-      { value: 'cuatrimestral', text: 'Cuatrimestral' },
-      { value: 'semestral', text: 'Semestral' },
-      { value: 'anual', text: 'Anual' },
-    ];
-  
-    const gracePeriodOptions = [
-      { value: '0', text: 'Sin periodo de gracia' },
-      { value: '1', text: '1 fecha de pago' },
-      { value: '2', text: '2 fechas de pago' },
-    ];
-  
+        interestRate: '',
+        moratoryRate: '',
+        compensatoryRate: '',
+        interestChecked: '',
+        moratoryChecked: '',
+        compensatoryChecked: '',
+        interestPeriod: '',
+        interestCapitalization: '',
+        moratoryPeriod: '',
+        moratoryCapitalization: '',
+        compensatoryPeriod: '',
+        compensatoryCapitalization: '',
+      });
+    
+     // Estados para tasas de interés y opciones de capitalización para pago en cuotas
+     const [installmentPayOptions, setInstallmentPayOptions] = useState({
+        interestRate: '',
+        moratoryRate: '',
+        compensatoryRate: '',
+        interestChecked: '',
+        moratoryChecked: '',
+        compensatoryChecked: '',
+        interestPeriod: '',
+        interestCapitalization: '',
+        moratoryPeriod: '',
+        moratoryCapitalization: '',
+        compensatoryPeriod: '',
+        compensatoryCapitalization: '',
+        gracePeriod: '',
+        gracetype: '',
+      });
+     
+      const singleCapitalizationOptions = [
+        { value: 'diaria', text: 'Diaria' },
+        { value: 'mensual', text: 'Mensual' },
+        { value: 'bimestral', text: 'Bimestral' },
+      ];
+    
+      const singlePeriodOptions = [
+        { value: 'mensual', text: 'Mensual' },
+        { value: 'bimestral', text: 'Bimestral' },
+      ];
+    
+      const gracePeriodOptions = [
+        { value: 0, text: 'Sin periodo de gracia' },
+        { value: 1, text: '1 fecha de pago' },
+        { value: 2, text: '2 fechas de pago' },
+      ];  
+
+      const graceTypeOptions = [
+        { value: 0, text: 'Total' },
+        { value: 1, text: 'Parcial' },
+      ];
+
+
+      useEffect(() => {        
+        const fetchData = async () => {
+            console.log('Obteniendo configuración de crédito...');
+            
+            try {    
+                const storeConfigRes = await storeConfigurationService.getCreditConfigurationByAccountId(id, token);
+                console.log('Configuración de crédito:', storeConfigRes);
+                const config = storeConfigRes.data.data;
+                const interestRes = storeConfigRes.data.data.interests;
+                setConfigId(config.id);
+                console.log('Configuración:', config);
+                console.log('Intereses:', interestRes);
+               
+                setCreditLine(config.maxCredit);
+                setSingleInterestId(interestRes[0].id);
+                setMoratoryInterestId(interestRes[1].id);
+                setCompensatoryInterestId(interestRes[2].id);
+                setInstallmentInterestId(interestRes[3].id);
+                setInstallmentMoratoryId(interestRes[4].id);
+                setInstallmentCompensatoryId(interestRes[5].id);
+
+                setSinglePayOptions({
+                    interestRate: parseFloat(interestRes[0].rate),
+                    moratoryRate: parseFloat(interestRes[1].rate),
+                    compensatoryRate: parseFloat(interestRes[2].rate),
+                    interestChecked: interestRes[0].typeInterest.description,
+                    moratoryChecked: interestRes[1].typeInterest.description,
+                    compensatoryChecked: interestRes[2].typeInterest.description,
+                    interestPeriod: interestRes[0].capitalizationPeriod.type,
+                    interestCapitalization: interestRes[0].capitalizationPeriod.type,
+                    moratoryPeriod: interestRes[1].capitalizationPeriod.type,
+                    moratoryCapitalization: interestRes[1].capitalizationPeriod.type,
+                    compensatoryPeriod: interestRes[2].capitalizationPeriod.type,
+                    compensatoryCapitalization: interestRes[2].capitalizationPeriod.type,
+                });
+    
+                setInstallmentPayOptions({
+                    interestRate: parseFloat(interestRes[3].rate),
+                    moratoryRate: parseFloat(interestRes[4].rate),
+                    compensatoryRate: parseFloat(interestRes[5].rate),
+                    interestChecked: interestRes[3].typeInterest.description,
+                    moratoryChecked: interestRes[4].typeInterest.description,
+                    compensatoryChecked: interestRes[5].typeInterest.description,
+                    interestPeriod: interestRes[3].capitalizationPeriod.type,
+                    interestCapitalization: interestRes[3].capitalizationPeriod.type,
+                    moratoryPeriod: interestRes[4].capitalizationPeriod.type,
+                    moratoryCapitalization: interestRes[4].capitalizationPeriod.type,
+                    compensatoryPeriod: interestRes[5].capitalizationPeriod.type,
+                    compensatoryCapitalization: interestRes[5].capitalizationPeriod.type,
+                    gracePeriod: parseInt(config.gracePeriod),
+                    gracetype: parseInt(config.graceType),
+                });
+                console.log('Opciones de pago sin cuotas:', singlePayOptions);
+                console.log('Opciones de pago en cuotas:', installmentPayOptions);
+            } catch (error) {
+                console.error('Error getting credit configuration:', error);
+            }
+        };
+    
+        fetchData(); 
+        
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    
+    useEffect(() => {
+        console.log('Opciones de pago sin cuotas actualizadas:', singlePayOptions);
+        console.log('Opciones de pago en cuotas actualizadas:', installmentPayOptions);
+    }, [singlePayOptions, installmentPayOptions]);
+    
     const handleChangeSinglePay = (field, value) => {
       setSinglePayOptions(prevState => ({
         ...prevState,
@@ -76,11 +167,136 @@ function StoreConfiguration() {
         [field]: value,
       }));
     };
-  
-    useEffect(() => {
-      console.log('Opciones de pago sin cuotas:', singlePayOptions);
-      console.log('Opciones de pago en cuotas:', installmentPayOptions);
-    }, [singlePayOptions, installmentPayOptions]);
+
+    const buildInterestRequest = (rate, pay, type, period, capitalization) => {
+        let typeInterest = type === 'efectiva' ? 1 : 2;
+        let capitalizationPeriod = 1;
+
+        if(type === 'efectiva'){
+            switch(period){
+                case 'mensual': capitalizationPeriod = 2; break;
+                case 'bimestral': capitalizationPeriod = 3; break;
+                default: period = 1; break;
+            }
+        } else {
+            switch(capitalization){
+                case 'diaria': capitalizationPeriod = 1; break;
+                case 'mensual': capitalizationPeriod = 2; break;
+                case 'bimestral': capitalizationPeriod = 3; break;
+                default: capitalization = 1; break;
+            }
+        }
+
+        const interest = new InterestRequest(
+            parseFloat(rate),
+            parseFloat(configId),
+            parseFloat(pay), 
+            typeInterest,
+            capitalizationPeriod
+        );
+        return interest;
+    };
+
+    const handleUpdate = async (event) => {  
+        event.preventDefault();
+        setMaxMonthlyFee('2');
+
+        //Actualizar config
+        const updateConfig = new CreditConfigurationRequest(
+            parseInt(creditLine),
+            parseInt(maxMonthlyFee),
+            0,
+            parseInt(installmentPayOptions.gracePeriod),
+            parseInt(installmentPayOptions.gracetype),
+            0,
+            parseInt(id)
+        );
+        console.log('Configuración de crédito:', updateConfig);
+        try {
+            const updateRes = await storeConfigurationService.updateCreditConfiguration(configId, token, updateConfig);
+            console.log('Configuración actualizada:', updateRes);
+
+            if (updateRes.status === 200) {
+                toast.success("Configuración actualizada exitosamente", {
+                    position: "top-center",
+                    style: { background: '#FFFFFF', color: '#000000' }, 
+                    autoClose: 1000,
+                });
+            }
+        } catch (error) {
+            console.error('Error updating credit configuration:', error);
+        }
+
+        //Actualizar intereses
+        //Pago sin cuotas
+        const singleInterest = buildInterestRequest(
+            singlePayOptions.interestRate,
+            1,
+            singlePayOptions.interestChecked,
+            singlePayOptions.interestPeriod,
+            singlePayOptions.interestCapitalization
+        )
+
+        const singleInterestRes = await interestService.updateInterest(singleInterestId, token, singleInterest);
+        console.log('Intereses actualizados:', singleInterestRes);
+
+        const singleMoratory = buildInterestRequest(
+            singlePayOptions.moratoryRate,
+            2,
+            singlePayOptions.moratoryChecked,
+            singlePayOptions.moratoryPeriod,
+            singlePayOptions.moratoryCapitalization
+        )
+
+        const singleMoratoryRes = await interestService.updateInterest(moratoryInterestId, token, singleMoratory)
+        console.log('Intereses actualizados:', singleMoratoryRes);
+
+        const singleCompensatory = buildInterestRequest(
+            singlePayOptions.compensatoryRate,
+            3,
+            singlePayOptions.compensatoryChecked,
+            singlePayOptions.compensatoryPeriod,
+            singlePayOptions.compensatoryCapitalization
+        )
+
+        const singleCompensatoryRes = await interestService.updateInterest(compensatoryInterestId, token, singleCompensatory)
+        console.log('Intereses actualizados:', singleCompensatoryRes);
+
+        //Pago en cuotas
+
+        const installmentInterest = buildInterestRequest(
+            installmentPayOptions.interestRate,
+            4,
+            installmentPayOptions.interestChecked,
+            installmentPayOptions.interestPeriod,
+            installmentPayOptions.interestCapitalization
+        )
+
+        const installmentInterestRes = await interestService.updateInterest(installmentInterestId, token, installmentInterest)
+        console.log('Intereses actualizados:', installmentInterestRes);
+
+        const installmentMoratory = buildInterestRequest(
+            installmentPayOptions.moratoryRate,
+            5,
+            installmentPayOptions.moratoryChecked,
+            installmentPayOptions.moratoryPeriod,
+            installmentPayOptions.moratoryCapitalization
+        )
+
+        const installmentMoratoryRes = await interestService.updateInterest(installmentMoratoryId, token, installmentMoratory)
+        console.log('Intereses actualizados:', installmentMoratoryRes);
+
+        const installmentCompensatory = buildInterestRequest(
+            installmentPayOptions.compensatoryRate,
+            6,
+            installmentPayOptions.compensatoryChecked,
+            installmentPayOptions.compensatoryPeriod,
+            installmentPayOptions.compensatoryCapitalization
+        )
+
+        const installmentCompensatoryRes = await interestService.updateInterest(installmentCompensatoryId, token, installmentCompensatory)
+        console.log('Intereses actualizados:', installmentCompensatoryRes);
+    }
 
   return (
     <motion.div
@@ -170,6 +386,7 @@ function StoreConfiguration() {
                         <div className='inner-config-row'>
                             <DropDownDark
                                 options={singlePeriodOptions}
+                                value={singlePayOptions.interestPeriod}
                                 onChange={e => handleChangeSinglePay('interestPeriod', e.target.value)}
                                 placeholder="Selecciona una opción"
                             />
@@ -190,6 +407,7 @@ function StoreConfiguration() {
                         <div className='inner-config-row'>
                             <DropDownDark
                                 options={singleCapitalizationOptions}
+                                value={singlePayOptions.interestCapitalization}
                                 onChange={e => handleChangeSinglePay('interestCapitalization', e.target.value)}
                                 placeholder="Selecciona una opción"
                             />
@@ -250,6 +468,7 @@ function StoreConfiguration() {
                             <div className='inner-config-row'>
                                 <DropDownDark
                                     options={singlePeriodOptions}
+                                    value = {singlePayOptions.moratoryPeriod}
                                     onChange={e => handleChangeSinglePay('moratoryPeriod', e.target.value)}
                                     placeholder="Selecciona una opción"
                                 />
@@ -271,6 +490,7 @@ function StoreConfiguration() {
                             <div className='inner-config-row'>
                                 <DropDownDark
                                 options={singleCapitalizationOptions}
+                                value = {singlePayOptions.moratoryCapitalization}
                                 onChange={e => handleChangeSinglePay('moratoryCapitalization', e.target.value)}
                                 placeholder="Selecciona una opción"
                                 />
@@ -332,6 +552,7 @@ function StoreConfiguration() {
                             <div className='inner-config-row'>
                                 <DropDownDark
                                     options={singlePeriodOptions}
+                                    value={singlePayOptions.compensatoryPeriod}
                                     onChange={e => handleChangeSinglePay('compensatoryPeriod', e.target.value)}
                                     placeholder="Selecciona una opción"
                                 />
@@ -352,6 +573,7 @@ function StoreConfiguration() {
                             <div className='inner-config-row'>
                                 <DropDownDark
                                     options={singleCapitalizationOptions}
+                                    value={singlePayOptions.compensatoryCapitalization}
                                     onChange={e => handleChangeSinglePay('compensatoryCapitalization', e.target.value)}
                                     placeholder="Selecciona una opción"
                                 />
@@ -425,6 +647,7 @@ function StoreConfiguration() {
                                 <div className='inner-config-row'>
                                 <DropDownDark
                                     options={singlePeriodOptions}
+                                    value={installmentPayOptions.interestPeriod}
                                     onChange={e => handleChangeInstallmentPay('interestPeriod', e.target.value)}
                                     placeholder="Selecciona una opción"
                                 />
@@ -445,6 +668,7 @@ function StoreConfiguration() {
                                 <div className='inner-config-row'>
                                 <DropDownDark
                                     options={singleCapitalizationOptions}
+                                    value={installmentPayOptions.interestCapitalization}
                                     onChange={e => handleChangeInstallmentPay('interestCapitalization', e.target.value)}
                                     placeholder="Selecciona una opción"
                                 />
@@ -505,6 +729,7 @@ function StoreConfiguration() {
                             <div className='inner-config-row'>
                             <DropDownDark
                                 options={singlePeriodOptions}
+                                value={installmentPayOptions.moratoryPeriod}
                                 onChange={e => handleChangeInstallmentPay('moratoryPeriod', e.target.value)}
                                 placeholder="Selecciona una opción"
                             />
@@ -525,6 +750,7 @@ function StoreConfiguration() {
                             <div className='inner-config-row'>
                             <DropDownDark
                                 options={singleCapitalizationOptions}
+                                value={installmentPayOptions.moratoryCapitalization}
                                 onChange={e => handleChangeInstallmentPay('moratoryCapitalization', e.target.value)}
                                 placeholder="Selecciona una opción"
                             />
@@ -584,6 +810,7 @@ function StoreConfiguration() {
                             <div className='inner-config-row'>
                             <DropDownDark
                                 options={singlePeriodOptions}
+                                value={installmentPayOptions.compensatoryPeriod}
                                 onChange={e => handleChangeInstallmentPay('compensatoryPeriod', e.target.value)}
                                 placeholder="Selecciona una opción"
                             />
@@ -604,6 +831,7 @@ function StoreConfiguration() {
                             <div className='inner-config-row'>
                             <DropDownDark
                                 options={singleCapitalizationOptions}
+                                value={installmentPayOptions.compensatoryCapitalization}
                                 onChange={e => handleChangeInstallmentPay('compensatoryCapitalization', e.target.value)}
                                 placeholder="Selecciona una opción"
                             />
@@ -620,16 +848,33 @@ function StoreConfiguration() {
                         <p className='label small'>Periodo de gracia: </p>
                         <div className='inner-config-row'>
                             <DropDownDark
-                                    options={gracePeriodOptions}
-                                    onChange={e => handleChangeInstallmentPay('gracePeriod', e.target.value)}
-                                    placeholder="Selecciona una opción"
-                            />       
+                                options={gracePeriodOptions}
+                                value={installmentPayOptions.gracePeriod}
+                                onChange={e => handleChangeInstallmentPay('gracePeriod', e.target.value)}
+                                placeholder="Selecciona una opción"
+                            />
+                            {installmentPayOptions.gracePeriod !== 0 && (
+                                 <motion.div
+                                 initial={{ opacity: 0, width: '0' }}
+                                 animate={{ opacity: 1, width: '100%' }}
+                                 exit={{ opacity: 0, width: '0'  }}
+                                 transition={{ duration: 0.3, delay: 0 }}
+                                 style={{ display: 'flex', width: '100%'}}
+                                 >
+                                    <DropDownDark
+                                        options={graceTypeOptions}
+                                        value={installmentPayOptions.gracetype}
+                                        onChange={e => handleChangeInstallmentPay('gracetype', e.target.value)}
+                                        placeholder="Selecciona una opción"
+                                    />
+                                </motion.div>
+                            )}
                         </div>
-                    </div>   
-                </div> 
+                    </div>
+                </div>
           </div>
 
-          <Button text={'Guardar'} alignment={'flex-start'} />
+          <Button text={'Guardar'} alignment={'flex-start'} onClick={handleUpdate} />
         </form>
       </div>
     </motion.div>
