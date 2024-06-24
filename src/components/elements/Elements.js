@@ -223,13 +223,13 @@ function CartItem({ product, onIncrease, onDecrease, onRemove }) {
   );
 }
 
-function PaymentDetailsCard ({ remainingAmount, selectedOption, interestRate, interest, totalToPay, onAccept }) {
+function PaymentDetailsCard ({ rateName, remainingAmount, selectedOption, interestRate, interest, totalToPay, onAccept }) {
   return (
           <div className='payment-details-card'>
             <h2>Detalle</h2>
             <p>Monto a financiar: S/ {remainingAmount.toFixed(2)}</p>
             <p>Cuotas: {selectedOption === '0' ? 'Sin cuotas' : `${selectedOption} cuotas`}</p>
-            <p>Tasa {selectedOption === '0' ? 'Nominal' : 'Efectiva'} Mensual: {interestRate * 100}%</p>
+            <p>{rateName} : {interestRate}%</p>
             <p>Interés: S/ {interest.toFixed(2)}</p>
             <hr />
             <p>Total a pagar: S/ {totalToPay.toFixed(2)}</p>

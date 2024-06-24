@@ -1,11 +1,10 @@
 import React from 'react';
 import logo from '../assets/flexpay_logo.png';
 import './styles/Navbar.css';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 function Navbar404() {
-
     const navigate = useNavigate();
 
     const handleLogoClick = () => {
