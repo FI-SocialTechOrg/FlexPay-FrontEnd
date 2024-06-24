@@ -7,6 +7,9 @@ import { useLocation } from 'react-router-dom';
 import './styles/Payment.css';
 import CreditConfigurationService from '../../../service/CreditConfigurationService';
 import { anualidadVcVlPteGT, anualidadVcVlPteGTEfectiva, nominalaEfectiva, valorFuturoTsEf, valorFuturoTsNl } from '../../../functions/functions';
+import ShoppingCartService from '../../../service/ShoppingCartService';
+import ShoppingCartRequest from '../../../model/dto/request/ShoppingCartRequest';
+/*import CreditCardService from '../../../service/CreditCardService';*/
 
 function PaymentView({ totalAmount }) {
     const location = useLocation();
@@ -15,13 +18,18 @@ function PaymentView({ totalAmount }) {
 
     const storedUser = localStorage.getItem('user');
     const user = JSON.parse(storedUser);
+    const userid = user.id;
+    const accountid = user.account.id;
     const token = user.token;
 
     const parts = location.pathname.split('/');
     const currentStoreId = parts[parts.length - 3]; 
 
     const storeConfigurationService = new CreditConfigurationService();
+    const shoppingCartService = new ShoppingCartService();
+   /* const creditCardService = new CreditCardService();*/
 
+    const [shoppingCartId, setShoppingCartId] = useState('');
     const [selectedOption, setSelectedOption] = useState('0'); 
     const [initialPayment, setInitialPayment] = useState(''); 
     const [includeGracePeriod, setIncludeGracePeriod] = useState(false); 
@@ -262,78 +270,185 @@ function PaymentView({ totalAmount }) {
         return daysDifference;
     }
 
-    const handleContinue = () => {
-        console.log(singlePayOptions);
-        console.log(installmentPayOptions);
-        buildInterest();
-
-        //ignorar esto
-        console.log(nominalaEfectiva);
-        console.log(fee);
-
-        //hasta aqui
-
-        let e_rate = interestRate.rate;
-        let present_value = financeAmount;
-        let period;
-
-        if(interestRate.period === 'Mensual'){
-            period = 30;
-        } else if(interestRate.period === 'Bimestral'){
-                period = 60;
+    const updateShoppingCart = async (shoppingCartReq) => {
+        try {
+            const updateRes = await shoppingCartService.updateShoppingCart(shoppingCartId, token, shoppingCartReq);
+            if (updateRes.status === 200) {
+                console.log('Carrito actualizado');
+                console.log(updateRes);
+                return updateRes;
+            } else {
+                console.log('Error al actualizar el carrito de compras');
+            }
+        } catch (error) {
+            console.log('Error al actualizar el carrito de compras', error);
         }
+    }
 
-        const payDay = user.creditTerm;
-        let days = daysToNextPayment(parseInt(payDay));
-        console.log(paymentDay)
+    /*const updateCrecditCard = async (creditCardReq) => {
+        try {
+            const updateRes = await creditCardService.updateCreditCard(creditCardId, token, creditCardReq);
+            if (updateRes.status === 200) {
+                console.log('Tarjeta de crédito actualizada');
+                console.log(updateRes);
+                return updateRes;
+            } else {
+                console.log('Error al actualizar la tarjeta de crédito');
+            }
+        }
+        catch (error) {
+            
+    }*/
 
-        if(selectedOption === '0'){
-            //Caso: Pago sin cuotas 
+        const handleContinue = (event) => {
+            event.preventDefault();
+        
+            console.log(singlePayOptions);
+            console.log(installmentPayOptions);
+            buildInterest();
+        
+            // Ignorar esto
+            console.log(nominalaEfectiva);
+            console.log(fee);
+            // Hasta aquí
+        
+            let e_rate = interestRate.rate;
+            let present_value = financeAmount;
+            let period;
+            const payDay = user.creditTerm;
+            let days = daysToNextPayment(parseInt(payDay));
+            let cuota = 0;
             let future_value = 0;
-
-            if(interestRate.name === 'Tasa Efectiva'){
-                //Tasa efectiva
-                future_value = valorFuturoTsEf(present_value, period, e_rate, days);
+            console.log(paymentDay);
+        
+            if (interestRate.period === 'Mensual') {
+                period = 30;
+            } else if (interestRate.period === 'Bimestral') {
+                period = 60;
             }
-            else{ 
-                //Tasa nominal
-                future_value = valorFuturoTsNl(period, e_rate, period, days, present_value, days);
-            }
+        
+            if (selectedOption === '0') {
+                // Caso: Pago sin cuotas
+                cuota = 0;
+        
+                if (interestRate.name === 'Tasa Efectiva') {
+                    // Tasa efectiva
+                    future_value = valorFuturoTsEf(present_value, period, e_rate, days);
+                } else {
+                    // Tasa nominal
+                    future_value = valorFuturoTsNl(period, e_rate, period, days, present_value, days);
+                }
+                console.log('Valor futuro:', future_value);
+                console.log('Valor presente:', present_value);
                 let interest = future_value - present_value;
+                console.log(interest);
                 setInterest(interest);
                 setTotalToPay(future_value);
-        } else { 
-             //Caso: Pago en cuotas 
-             //Tasa efectiva
-             let cuota
-
-             if(interestRate.name === 'Tasa Efectiva'){
-                if(includeGracePeriod){
-                    cuota = anualidadVcVlPteGTEfectiva(e_rate, present_value, initialPayment, 30, parseInt(selectedOption), 30, days);
+            } else {
+                // Caso: Pago en cuotas
+                // Tasa efectiva
+        
+                if (interestRate.name === 'Tasa Efectiva') {
+                    if (includeGracePeriod) {
+                        cuota = anualidadVcVlPteGTEfectiva(e_rate, present_value, initialPayment, 30, parseInt(selectedOption), 30, days);
+                    } else {
+                        cuota = anualidadVcVlPteGTEfectiva(e_rate, present_value, initialPayment, 30, parseInt(selectedOption), 30, 0);
+                    }
                 } else {
-                    cuota = anualidadVcVlPteGTEfectiva(e_rate, present_value, initialPayment, 30, parseInt(selectedOption), 30, 0);
+                    if (includeGracePeriod) {
+                        cuota = anualidadVcVlPteGT(period, e_rate, period, present_value, initialPayment, 30, parseInt(selectedOption), 30, days);
+                    } else {
+                        cuota = anualidadVcVlPteGTEfectiva(e_rate, present_value, initialPayment, 30, parseInt(selectedOption), 30, 0);
+                    }
                 }
-             }
-             else{
-                if(includeGracePeriod){
-                    cuota = anualidadVcVlPteGT(period, e_rate, period, present_value, initialPayment, 30, parseInt(selectedOption), 30, days);
-                } else {
-                    cuota = anualidadVcVlPteGTEfectiva(e_rate, present_value, initialPayment, 30, parseInt(selectedOption), 30, 0);
-                }
-             }
-             let total = cuota * parseInt(selectedOption);
+                console.log(cuota);
+                let total = cuota * parseInt(selectedOption);
                 setInterest(total - present_value);
                 setTotalToPay(total);
                 setFee(cuota);
-        }
-
-        setShowCard(true);
-    };
+            }
+        
+            // Crear un ID único para el movimiento
+            const generateUniqueId = () => {
+                return Date.now().toString() + Math.floor(Math.random() * 10000).toString();
+            };
+        
+            // Guardar en localStorage
+            const movement = {
+                id: generateUniqueId(),
+                storeid: currentStoreId,
+                customerId: userid,
+                shoppingCartId: shoppingCartId,
+                financeAmount: financeAmount,
+                selectedOption: selectedOption,
+                interestRate: interestRate.rate,
+                rateName: `${interestRate.name} ${interestRate.period}`,
+                interest: interest,
+                totalToPay: totalToPay,
+                n_fees: selectedOption,
+                ammount_fee: cuota,
+                onAccept: () => console.log('Pago aceptado')
+            };
+        
+            console.log('Detalle del movimiento:', movement);
+        
+            const movementJSON = JSON.stringify(movement);
+            localStorage.setItem('movement', movementJSON);
+        
+            // Actualizar el arreglo de movimientos en el localStorage
+            let creditCardMovements = JSON.parse(localStorage.getItem('creditCardMovements')) || [];
+        
+            // Crear un nuevo objeto de estado de la tarjeta de crédito
+            let newCreditCardState = {
+                id: generateUniqueId(),
+                initialCredit: 0,
+                balance: financeAmount,
+                purchase: totalToPay,
+                purchaseInterest: interest,
+                debt: totalToPay,
+                stateCard: 0,
+                shoppingCart: shoppingCartId
+            };
+        
+            creditCardMovements.push(newCreditCardState);
+        
+            localStorage.setItem('creditCardMovements', JSON.stringify(creditCardMovements));
+        
+            let shoppingCartReq = new ShoppingCartRequest(totalToPay, userid, 1);
+        
+            // Actualizar carrito
+            updateShoppingCart(shoppingCartReq);
+        
+            setShowCard(true);
+        };
 
     const toggleIncludeGracePeriod = () => {
         setIncludeGracePeriod(!includeGracePeriod);
     };
     
+    useEffect(()  => {
+        async function getShoppingCart() {
+            try {
+                const shoppingCartRes = await shoppingCartService.getShoppingCartByAccountId(accountid, token);
+                if (shoppingCartRes.status === 200) {
+                    const shoppingCart = shoppingCartRes.data.data;
+                    console.log('Data del carrito', shoppingCart);
+                    const scid = shoppingCart.id;
+                    setShoppingCartId(scid);
+                    localStorage.setItem('shoppingCartId', scid);
+                } else {
+                    console.log('Error al obtener el carrito de compras');
+                }
+            } catch (error) {
+                console.log('Error al obtener el carrito de compras', error);
+            }
+        }
+
+        getShoppingCart();
+
+        //eslint-disable-next-line
+    }, []);
+
     useEffect(() => {       
             const storedCreditTerm = localStorage.getItem('user.creditTerm');
             if (storedCreditTerm) {

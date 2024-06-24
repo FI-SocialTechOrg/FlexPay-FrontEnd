@@ -17,6 +17,21 @@ class CreditCardService {
         }
     }
 
+    async updateCreditCard(id, token, CreditCardUpdateRequest) {
+        console.log('Actualizando tarjeta de crédito...');
+        console.log('Token enviado:', token);
+        try {
+            const response = await axios.put(`${config.API_URL}/FlexPay/credit-card/${id}`, CreditCardUpdateRequest, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            return response;
+        } catch (error) {
+            throw new Error('Error during update: ' + error);
+        }
+    }
+
 }
 
 export default CreditCardService;
