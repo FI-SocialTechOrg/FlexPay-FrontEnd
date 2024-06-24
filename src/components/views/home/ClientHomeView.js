@@ -7,6 +7,7 @@ import Stores from '../store/Stores';
 import ClientStoreView from '../store/ClientStoreView';
 import ShoppingCartView from '../store/ShoppingCartView';
 import PaymentView from '../payment/PaymentView';
+import AccountStatementView from '../configuration/AccountStatementView';
 
 function ClientHomeView() {
     return (
@@ -26,6 +27,7 @@ function ClientHomeView() {
                 <Route path="/stores/:id" element={<ClientStoreView />} /> 
                 <Route path='/stores/:id/shopping-cart' element={<ShoppingCartView />} />
                 <Route path='/stores/:id/shopping-cart/payment' element={<PaymentView />} />
+                <Route path='/transactions' element={<AccountStatementView />} />
                </Routes>
             </div>
         </motion.div>)

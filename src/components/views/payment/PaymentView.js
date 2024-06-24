@@ -297,7 +297,7 @@ function PaymentView({ totalAmount }) {
             }
         }
         catch (error) {
-            
+
     }*/
 
         const handleContinue = (event) => {

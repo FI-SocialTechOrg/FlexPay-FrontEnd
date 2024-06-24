@@ -136,7 +136,7 @@ function Navbar() {
                             <div className="account-dropdown-content">
                             {isUserClient && (
                                 <>
-                                    <Link to="/client/stores">Estado de cuenta</Link>
+                                    <Link to="/client/transactions">Estado de cuenta</Link>
                                 </>
                             )}
                             {!isUserClient && (

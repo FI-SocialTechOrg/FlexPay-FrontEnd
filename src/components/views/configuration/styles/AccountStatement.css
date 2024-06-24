@@ -1,0 +1,33 @@
+.store-container {
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.store-container-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.movement-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.movement-card {
+    padding: 15px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.movement-card-item {
+    margin-bottom: 10px;
+}
+
+.movement-card-item strong {
+    font-weight: bold;
+}
