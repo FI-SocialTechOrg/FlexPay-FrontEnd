@@ -61,6 +61,7 @@ function Welcome() {
         const id = user.id;
         const token = user.token;
 
+        console.log(id);
 
         const clientReq = new ClientRegisterRequest(clientData.firstName, clientData.lastName, clientData.dni,
             clientData.phone, clientData.gender, clientData.birthday, clientData.photoUrl, selectedOption, clientData.account.id);

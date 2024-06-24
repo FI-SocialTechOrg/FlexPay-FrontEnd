@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Auth from './components/views/authentication/Auth';
 import Welcome from './components/views/configuration/Welcome';
 import ClientHomeView from './components/views/home/ClientHomeView';

