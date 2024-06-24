@@ -8,6 +8,10 @@ import ClientService from '../../../service/ClientService';
 import ClientRegisterRequest from '../../../model/dto/request/ClientRegisterRequest';
 import StoreRegisterRequest from '../../../model/dto/request/StoreRegisterRequest';
 import StoreService from '../../../service/StoreService';
+import CreditConfigurationService from '../../../service/CreditConfigurationService';
+import InterestService from '../../../service/InterestService';
+import CreditConfigurationRequest from '../../../model/dto/request/CreditConfigurationRequest';
+import InterestRequest from '../../../model/dto/request/InterestRequest';
 
 function Register2({ role, id, token }) {
 
@@ -25,6 +29,8 @@ function Register2({ role, id, token }) {
 
     const clientService = new ClientService();
     const storeService = new StoreService();
+    const storeConfigurationService = new CreditConfigurationService();
+    const interestService = new InterestService();
 
     const handleRegisterClient =  async () => {
         const localdate = new Date().toISOString().split('T')[0];
@@ -54,15 +60,72 @@ function Register2({ role, id, token }) {
             console.log('Error durante el registro:', error);
         }
     }
+
+    const createInterestRates = async (storeConfigId) => {
+        console.log('Creando tasas de interes...');
+
+                //Crear las tasas de interés de la tienda
+                // Por defecto es tasa efectiva mensual 0%
+
+                try{
+                     //Tasa de interés - Pago sin cuotas
+                    const interestReq1 = new InterestRequest(0, storeConfigId, 1, 1, 2);
+                    await interestService.createInterest(state.token, interestReq1);
+    
+                    //Tasa de interés moratoria - Pago sin cuotas
+                    const interestMoratory1 = new InterestRequest(0, storeConfigId, 2, 1, 2);
+                    await interestService.createInterest(state.token, interestMoratory1);
+                
+                    //Tasa de interés compensatoria - Pago con cuotas  
+                    const interestCompensatory1 = new InterestRequest(0, storeConfigId, 3, 1, 2);
+                    await interestService.createInterest(state.token, interestCompensatory1);
+                    
+                    //Tasa de interés - Pago en cuotas
+                    const interestReq2 = new InterestRequest(0, storeConfigId, 4, 1, 2);
+                    await interestService.createInterest(state.token, interestReq2);
+                   
+                    //Tasa de interés moratoria - Pago en cuotas
+                    const interestMoratory2 = new InterestRequest(0, storeConfigId, 5, 1, 2);
+                    await interestService.createInterest(state.token, interestMoratory2);
+                    
+                    //Tasa de interés compensatoria - Pago en cuotas   
+                    const interestCompensatory2 = new InterestRequest(0, storeConfigId, 6, 1, 2);
+                    await interestService.createInterest(state.token, interestCompensatory2);
+                    
+                } catch (error) {
+                    console.log('Error durante la creacion de las tasas de interes:', error);
+                }
+                
+    }
+
+    const createCreditConfiguration = async (storeConfigId) => {
+        const storeConfigReq = new CreditConfigurationRequest(0, 0, 0, 0, 0, 0, state.id);
+        try{
+            const storeConfigRes = await storeConfigurationService.createCreditConfiguration(state.token, storeConfigReq );
+            if(storeConfigRes.status === 200 || storeConfigRes.status === 201) {
+                const storeConfigId = storeConfigRes.data.data.id;
+                createInterestRates(storeConfigId);
+            } else {
+                console.log('Error durante la creacion de la configuracion de credito');
+                console.log('Error:', storeConfigRes);
+            }
+
+        } catch (error) {
+            console.log('Error durante la creacion de la configuracion de credito:', error);
+        }
+    }
+
      
     const handleRegisterStore = async () => {
         const storeReq = new StoreRegisterRequest(name, lastName, phone, dni, ruc, storeName, storeImageUrl, state.id);
         console.log('storeReq', state.id)
         try {
+            //Crear la tienda
             const storeRegister = await storeService.registerStore(storeReq, state.token);
 
             if(storeRegister.status === 200 || storeRegister.status === 201) {
                 console.log('Tienda registrada correctamente');
+                createCreditConfiguration(storeRegister.data.data.id);
                 toast.success("Cuenta creada exitosamente", {
                     position: "top-center",
                     style: { background: '#FFFFFF', color: '#000000' }, 

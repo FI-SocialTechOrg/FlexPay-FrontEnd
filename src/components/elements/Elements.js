@@ -125,9 +125,9 @@ function DropDownLight({ options, onChange }) {
   );
 }
 
-function DropDownDark({ options, onChange, marginbottom }) {
+function DropDownDark({ options, value, onChange, marginbottom }) {
   return (
-    <select className="dropdown-dark" onChange={onChange} style={{marginBottom: marginbottom || 0}}>
+    <select className="dropdown-dark"  value={value} onChange={onChange} style={{marginBottom: marginbottom || 0}}>
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.text}
