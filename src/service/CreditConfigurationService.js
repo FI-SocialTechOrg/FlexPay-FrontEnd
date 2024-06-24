@@ -47,6 +47,21 @@ class CreditConfigurationService {
         }
     }
 
+    async getCreditConfigurationByStoreId(storeId, token) {
+        console.log('Obteniendo configuración de crédito...');
+        console.log('Token enviado:', token);
+        try {
+            const response = await axios.get(`${config.API_URL}/FlexPay/credit-configuration/store/${storeId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            return response;
+        } catch (error) {
+            throw new Error('Error getting credit configuration: ' + error);
+        }
+    }
+
     async updateCreditConfiguration(id, token, CreditConfigurationUpdateRequest) {
         console.log('Actualizando configuración de crédito...');
         console.log('Token enviado:', token);

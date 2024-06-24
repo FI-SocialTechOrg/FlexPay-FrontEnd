@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import React, { useState, useEffect } from 'react';
 import StoreService from '../../../service/StoreService';
 import './styles/Store.css';
-import { ProductCard } from  '../../elements/Elements';
+import { ProductCard } from '../../elements/Elements';
 import { useLocation } from 'react-router-dom';
 
 function ClientStoreView() {
@@ -23,12 +23,11 @@ function ClientStoreView() {
         const token = user.token;
         try {
             const storeRes = await storeService.getStoreById(currentStoreId, token);
-            if(storeRes.status === 200 || storeRes.status === 201){
-                setProductStocks(storeRes.data.data.productStocks)
+            if (storeRes.status === 200 || storeRes.status === 201) {
+                setProductStocks(storeRes.data.data.productStocks);
                 console.log(storeRes.data.data.productStocks);
             }
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
         }
     }
@@ -65,14 +64,19 @@ function ClientStoreView() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, delay: 0}}
-            style={{display: 'flex', flexDirection: 'column'}}
+            transition={{ duration: 0.5, delay: 0 }}
+            style={{ display: 'flex', flexDirection: 'column' }}
         >
             <div className='store-container'>
                 <h1 className='store-container-title'>Selecciona los productos</h1>
                 <div className="product-cards">
                     {productStocks.map(product => (
-                        <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
+                        <ProductCard
+                            key={product.id}
+                            product={product}
+                            onAddToCart={handleAddToCart}
+                            storeId={location.pathname.split('/').pop()}
+                        />
                     ))}
                 </div>
             </div>

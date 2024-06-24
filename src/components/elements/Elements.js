@@ -8,7 +8,7 @@ import '../assets/store_icon.png';
 import '../assets/no_image_available.jpg';
 import ProductService from '../../service/ProductService';
 import ProductRequest from "../../model/dto/request/ProductRequest";
-import ProductStockRequest from "../../model/dto/request/ProductStockRequest";
+//import ProductStockRequest from "../../model/dto/request/ProductStockRequest";
 
 function TextInput({ type, placeholder, inputMode, value, onChange, max, maxWidth, maxHeight }) {
   return (
@@ -139,10 +139,19 @@ function DropDownDark({ options, value, onChange, marginbottom }) {
   );
 }
 
-function ProductCard({ product, onAddToCart }) {
+function ProductCard({ product, onAddToCart, storeId }) {
   const defaultproductimg = require('../assets/no_image_available.jpg');
-  const { id, name, price, mountStock, imageUrl } = product;
+  const { id, name, price, mountStock } = product;
   const [addedToCart, setAddedToCart] = useState(false);
+
+  useEffect(() => {
+      const storedCart = JSON.parse(localStorage.getItem('cart')) || {};
+      const storeCart = storedCart[storeId] || [];
+      const existingProduct = storeCart.find(item => item.id === id);
+      if (existingProduct) {
+          setAddedToCart(true);
+      }
+  }, [storeId, id]);
 
   const handleAddToCart = () => {
       onAddToCart(id);
@@ -153,15 +162,15 @@ function ProductCard({ product, onAddToCart }) {
       <div className="product-card">
           <img src={product.product.image || defaultproductimg} alt={name} className="product-image" />
           <div className='product-info'>
-            <h3>{name}</h3>
-            <div className="card-product-price">
-              <p className='product-label'>Precio:</p>
-              <p className='price'>S/ {parseFloat(price).toFixed(2)}</p>
-            </div>
-            <p className='stock'>Stock: {mountStock} unidades</p>
-            <button onClick={handleAddToCart} disabled={addedToCart}>
-                {addedToCart ? 'Añadido al carrito' : 'Añadir al carrito'}
-            </button>
+              <h3>{name}</h3>
+              <div className="card-product-price">
+                  <p className='product-label'>Precio:</p>
+                  <p className='price'>S/ {parseFloat(price).toFixed(2)}</p>
+              </div>
+              <p className='stock'>Stock: {mountStock} unidades</p>
+              <button onClick={handleAddToCart} disabled={addedToCart}>
+                  {addedToCart ? 'Añadido al carrito' : 'Añadir al carrito'}
+              </button>
           </div>
       </div>
   );
@@ -216,13 +225,13 @@ function CartItem({ product, onIncrease, onDecrease, onRemove }) {
   );
 }
 
-function PaymentDetailsCard ({ remainingAmount, selectedOption, interestRate, interest, totalToPay, onAccept }) {
+function PaymentDetailsCard ({ rateName, remainingAmount, selectedOption, interestRate, interest, totalToPay, onAccept }) {
   return (
           <div className='payment-details-card'>
             <h2>Detalle</h2>
             <p>Monto a financiar: S/ {remainingAmount.toFixed(2)}</p>
             <p>Cuotas: {selectedOption === '0' ? 'Sin cuotas' : `${selectedOption} cuotas`}</p>
-            <p>Tasa {selectedOption === '0' ? 'Nominal' : 'Efectiva'} Mensual: {interestRate * 100}%</p>
+            <p>{rateName} : {interestRate}%</p>
             <p>Interés: S/ {interest.toFixed(2)}</p>
             <hr />
             <p>Total a pagar: S/ {totalToPay.toFixed(2)}</p>
