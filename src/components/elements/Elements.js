@@ -408,8 +408,8 @@ function AddProductStock({ idStore, onSave, onClose }) {
                             ))}
                         </select>
                     </div>
-                    <div>
-                        <button type="button" className='store-add-button' onClick={handleAddProduct}>
+                    <div className='add-product-section'>
+                        <button type="button" className='add-product-button' onClick={handleAddProduct}>
                             <FontAwesomeIcon icon={faPlusCircle} style={{ paddingRight: '5px' }} />
                             Agregar producto nuevo
                         </button>
@@ -470,7 +470,7 @@ function AddProduct({onClose}) {
             const response = await productService.createProduct(productRequest, token);
             if (response.status === 200 || response.status === 201) {
                 console.log('Producto creado:', response.data.data);
-                onClose();
+                handleClose();
             }
         } catch (error) {
             console.error('Error creating product:', error);
