@@ -35,13 +35,27 @@ function ClientStoreView() {
 
     const handleAddToCart = (productId) => {
         console.log('Producto agregado al carrito con ID:', productId);
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const existingProduct = cart.find(item => item.id === productId);
+
+        const parts = location.pathname.split('/');
+        const currentStoreId = parts[parts.length - 1];
+
+        // Recupera el carrito del localStorage
+        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+        // Si no existe un carrito para la tienda actual, crea uno
+        if (!cart[currentStoreId]) {
+            cart[currentStoreId] = [];
+        }
+
+        // Busca si el producto ya está en el carrito de la tienda actual
+        const existingProduct = cart[currentStoreId].find(item => item.id === productId);
         if (existingProduct) {
             existingProduct.quantity += 1;
         } else {
-            cart.push({ id: productId, quantity: 1 });
+            cart[currentStoreId].push({ id: productId, quantity: 1 });
         }
+
+        // Guarda el carrito actualizado en el localStorage
         localStorage.setItem('cart', JSON.stringify(cart));
         console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
     };
