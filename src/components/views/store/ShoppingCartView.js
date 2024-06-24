@@ -21,6 +21,7 @@ function ShoppingCartView() {
         if (storedCart.length > 0) {
             getProducts(storedCart);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getProducts = async (cart) => {

@@ -12,6 +12,7 @@ function ClientStoreView() {
 
     useEffect(() => {
         getProductStocks();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getProductStocks = async () => {

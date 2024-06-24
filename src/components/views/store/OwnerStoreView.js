@@ -21,6 +21,7 @@ function OwnerStoreView() {
 
     useEffect(() => {
         getStoreData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getStoreData = async () => {

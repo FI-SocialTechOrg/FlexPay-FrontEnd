@@ -146,6 +146,7 @@ function StoreConfiguration() {
     
         fetchData(); 
         
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     
     useEffect(() => {
@@ -198,6 +199,7 @@ function StoreConfiguration() {
 
     const handleUpdate = async (event) => {  
         event.preventDefault();
+        setMaxMonthlyFee('2');
 
         //Actualizar config
         const updateConfig = new CreditConfigurationRequest(
