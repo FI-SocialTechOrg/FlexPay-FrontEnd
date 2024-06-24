@@ -74,9 +74,9 @@ function StoreConfiguration() {
       ];
     
       const gracePeriodOptions = [
-        { value: 0, text: 'Sin periodo de gracia' },
-        { value: 1, text: '1 fecha de pago' },
-        { value: 2, text: '2 fechas de pago' },
+        { value: '0', text: 'Sin periodo de gracia' },
+        { value: '1', text: '1 fecha de pago' },
+        { value: '2', text: '2 fechas de pago' },
       ];  
 
       const graceTypeOptions = [
@@ -134,7 +134,7 @@ function StoreConfiguration() {
                     moratoryCapitalization: interestRes[4].capitalizationPeriod.type,
                     compensatoryPeriod: interestRes[5].capitalizationPeriod.type,
                     compensatoryCapitalization: interestRes[5].capitalizationPeriod.type,
-                    gracePeriod: parseInt(config.gracePeriod),
+                    gracePeriod: config.gracePeriod.toString(),
                     gracetype: parseInt(config.graceType),
                 });
                 console.log('Opciones de pago sin cuotas:', singlePayOptions);
@@ -211,91 +211,85 @@ function StoreConfiguration() {
             0,
             parseInt(id)
         );
-        console.log('Configuración de crédito:', updateConfig);
         try {
             const updateRes = await storeConfigurationService.updateCreditConfiguration(configId, token, updateConfig);
-            console.log('Configuración actualizada:', updateRes);
 
             if (updateRes.status === 200) {
+
+                try {
+                    const singleInterest = buildInterestRequest(
+                        singlePayOptions.interestRate,
+                        1,
+                        singlePayOptions.interestChecked,
+                        singlePayOptions.interestPeriod,
+                        singlePayOptions.interestCapitalization
+                    )
+                    await interestService.updateInterest(singleInterestId, token, singleInterest);
+
+                    const singleMoratory = buildInterestRequest(
+                        singlePayOptions.moratoryRate,
+                        2,
+                        singlePayOptions.moratoryChecked,
+                        singlePayOptions.moratoryPeriod,
+                        singlePayOptions.moratoryCapitalization
+                    )
+                    await interestService.updateInterest(moratoryInterestId, token, singleMoratory)
+
+                    const singleCompensatory = buildInterestRequest(
+                        singlePayOptions.compensatoryRate,
+                        3,
+                        singlePayOptions.compensatoryChecked,
+                        singlePayOptions.compensatoryPeriod,
+                        singlePayOptions.compensatoryCapitalization
+                    )
+                    await interestService.updateInterest(compensatoryInterestId, token, singleCompensatory)
+
+                    const installmentInterest = buildInterestRequest(
+                        installmentPayOptions.interestRate,
+                        4,
+                        installmentPayOptions.interestChecked,
+                        installmentPayOptions.interestPeriod,
+                        installmentPayOptions.interestCapitalization
+                    )
+                    await interestService.updateInterest(installmentInterestId, token, installmentInterest)
+
+                    const installmentMoratory = buildInterestRequest(
+                        installmentPayOptions.moratoryRate,
+                        5,
+                        installmentPayOptions.moratoryChecked,
+                        installmentPayOptions.moratoryPeriod,
+                        installmentPayOptions.moratoryCapitalization
+                    )
+                    await interestService.updateInterest(installmentMoratoryId, token, installmentMoratory)
+            
+                    const installmentCompensatory = buildInterestRequest(
+                        installmentPayOptions.compensatoryRate,
+                        6,
+                        installmentPayOptions.compensatoryChecked,
+                        installmentPayOptions.compensatoryPeriod,
+                        installmentPayOptions.compensatoryCapitalization
+                    )
+                    await interestService.updateInterest(installmentCompensatoryId, token, installmentCompensatory)
+
+                } catch (error) {
+                    console.error('Error updating', error);
+                }
+
                 toast.success("Configuración actualizada exitosamente", {
                     position: "top-center",
                     style: { background: '#FFFFFF', color: '#000000' }, 
                     autoClose: 1000,
                 });
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+                
             }
         } catch (error) {
             console.error('Error updating credit configuration:', error);
         }
 
-        //Actualizar intereses
-        //Pago sin cuotas
-        const singleInterest = buildInterestRequest(
-            singlePayOptions.interestRate,
-            1,
-            singlePayOptions.interestChecked,
-            singlePayOptions.interestPeriod,
-            singlePayOptions.interestCapitalization
-        )
-
-        const singleInterestRes = await interestService.updateInterest(singleInterestId, token, singleInterest);
-        console.log('Intereses actualizados:', singleInterestRes);
-
-        const singleMoratory = buildInterestRequest(
-            singlePayOptions.moratoryRate,
-            2,
-            singlePayOptions.moratoryChecked,
-            singlePayOptions.moratoryPeriod,
-            singlePayOptions.moratoryCapitalization
-        )
-
-        const singleMoratoryRes = await interestService.updateInterest(moratoryInterestId, token, singleMoratory)
-        console.log('Intereses actualizados:', singleMoratoryRes);
-
-        const singleCompensatory = buildInterestRequest(
-            singlePayOptions.compensatoryRate,
-            3,
-            singlePayOptions.compensatoryChecked,
-            singlePayOptions.compensatoryPeriod,
-            singlePayOptions.compensatoryCapitalization
-        )
-
-        const singleCompensatoryRes = await interestService.updateInterest(compensatoryInterestId, token, singleCompensatory)
-        console.log('Intereses actualizados:', singleCompensatoryRes);
-
-        //Pago en cuotas
-
-        const installmentInterest = buildInterestRequest(
-            installmentPayOptions.interestRate,
-            4,
-            installmentPayOptions.interestChecked,
-            installmentPayOptions.interestPeriod,
-            installmentPayOptions.interestCapitalization
-        )
-
-        const installmentInterestRes = await interestService.updateInterest(installmentInterestId, token, installmentInterest)
-        console.log('Intereses actualizados:', installmentInterestRes);
-
-        const installmentMoratory = buildInterestRequest(
-            installmentPayOptions.moratoryRate,
-            5,
-            installmentPayOptions.moratoryChecked,
-            installmentPayOptions.moratoryPeriod,
-            installmentPayOptions.moratoryCapitalization
-        )
-
-        const installmentMoratoryRes = await interestService.updateInterest(installmentMoratoryId, token, installmentMoratory)
-        console.log('Intereses actualizados:', installmentMoratoryRes);
-
-        const installmentCompensatory = buildInterestRequest(
-            installmentPayOptions.compensatoryRate,
-            6,
-            installmentPayOptions.compensatoryChecked,
-            installmentPayOptions.compensatoryPeriod,
-            installmentPayOptions.compensatoryCapitalization
-        )
-
-        const installmentCompensatoryRes = await interestService.updateInterest(installmentCompensatoryId, token, installmentCompensatory)
-        console.log('Intereses actualizados:', installmentCompensatoryRes);
     }
 
   return (
@@ -853,7 +847,7 @@ function StoreConfiguration() {
                                 onChange={e => handleChangeInstallmentPay('gracePeriod', e.target.value)}
                                 placeholder="Selecciona una opción"
                             />
-                            {installmentPayOptions.gracePeriod !== 0 && (
+                            {installmentPayOptions.gracePeriod !== '0' && (
                                  <motion.div
                                  initial={{ opacity: 0, width: '0' }}
                                  animate={{ opacity: 1, width: '100%' }}
