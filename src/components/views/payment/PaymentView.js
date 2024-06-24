@@ -308,22 +308,24 @@ function PaymentView({ totalAmount }) {
              let cuota
 
              if(interestRate.name === 'Tasa Efectiva'){
-                cuota = anualidadVcVlPteGTEfectiva(e_rate, present_value, initialPayment, 30, parseInt(selectedOption), 30, 0);
+                if(includeGracePeriod){
+                    cuota = anualidadVcVlPteGTEfectiva(e_rate, present_value, initialPayment, 30, parseInt(selectedOption), 30, days);
+                } else {
+                    cuota = anualidadVcVlPteGTEfectiva(e_rate, present_value, initialPayment, 30, parseInt(selectedOption), 30, 0);
+                }
              }
              else{
-                cuota = anualidadVcVlPteGT(period, e_rate, period, present_value, initialPayment, 30, parseInt(selectedOption), 30, 0);
-               
+                if(includeGracePeriod){
+                    cuota = anualidadVcVlPteGT(period, e_rate, period, present_value, initialPayment, 30, parseInt(selectedOption), 30, days);
+                } else {
+                    cuota = anualidadVcVlPteGTEfectiva(e_rate, present_value, initialPayment, 30, parseInt(selectedOption), 30, 0);
+                }
              }
-
              let total = cuota * parseInt(selectedOption);
                 setInterest(total - present_value);
                 setTotalToPay(total);
                 setFee(cuota);
-
         }
-
-
-
 
         setShowCard(true);
     };
