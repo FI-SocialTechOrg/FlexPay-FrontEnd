@@ -1,12 +1,14 @@
 import './styles/ElementsStyles.css'
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faClose, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'; 
+import {faChevronDown, faClose, faEdit, faPlusCircle, faTrash} from '@fortawesome/free-solid-svg-icons';
 import '../assets/store_icon.png'; 
 import '../assets/no_image_available.jpg';
 import ProductService from '../../service/ProductService';
+import ProductRequest from "../../model/dto/request/ProductRequest";
+import ProductStockRequest from "../../model/dto/request/ProductStockRequest";
 
 function TextInput({ type, placeholder, inputMode, value, onChange, max, maxWidth, maxHeight }) {
   return (
@@ -316,11 +318,12 @@ function EditProduct({ productSelected, idStore, onEdit, onClose}) {
   );
 }
 
-function AddProduct({ idStore, onSave, onClose }) {
+function AddProductStock({ idStore, onSave, onClose }) {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState('');
     const [price, setPrice] = useState('');
     const [stock, setStock] = useState('');
+    const [showAddProductForm, setShowAddProductForm] = useState(false);
     const productService = new ProductService();
 
     useEffect(() => {
@@ -342,21 +345,30 @@ function AddProduct({ idStore, onSave, onClose }) {
         }
     };
 
-    const handleSave = (e) => {
+    const handleSaveProductStock  = (e) => {
         e.preventDefault();
-        const newProduct = {
+        const newProductStock  = {
             price: parseFloat(price),
             mountStock: parseInt(stock, 10),
             product: parseInt(selectedProduct, 10),
             store: idStore,
             stateStock: 1
         };
-        onSave(newProduct);
+        onSave(newProductStock);
     };
+
+    const handleAddProduct = () => {
+        setShowAddProductForm(true);
+    };
+
+    const handleCloseAddProduct = () => {
+        setShowAddProductForm(false);
+    };
+
     const handleChangePrice = (e) => setPrice(e.target.value);
     const handleChangeStock = (e) => setStock(e.target.value);
     const handleChangeProduct = (e) => setSelectedProduct(e.target.value);
-    const handleClose = (e) => onClose();
+    const handleClose = () => onClose();
 
     return (
         <motion.div
@@ -396,6 +408,12 @@ function AddProduct({ idStore, onSave, onClose }) {
                             ))}
                         </select>
                     </div>
+                    <div>
+                        <button type="button" className='store-add-button' onClick={handleAddProduct}>
+                            <FontAwesomeIcon icon={faPlusCircle} style={{ paddingRight: '5px' }} />
+                            Agregar producto nuevo
+                        </button>
+                    </div>
                     <div className='edit-group'>
                         <p className='edit-label'>Precio:</p>
                         <div className='price-input-group'>
@@ -423,10 +441,104 @@ function AddProduct({ idStore, onSave, onClose }) {
                     <Button
                         text='Guardar'
                         alignment='center'
-                        onClick={handleSave}
+                        onClick={handleSaveProductStock}
                         className='save-button'
                     />
+
+                    {showAddProductForm && (
+                     <AddProduct
+                         onClose={handleCloseAddProduct} />
+                    )}
                 </form>
+            </motion.div>
+        </motion.div>
+    );
+}
+
+function AddProduct({onClose}) {
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [image, setImage] = useState('');
+
+    const handleCreateProduct = async () => {
+        const storedUser = localStorage.getItem('user');
+        const user = JSON.parse(storedUser);
+        const token = user.token;
+        const productRequest = new ProductRequest(name, description, image);
+        const productService = new ProductService();
+        try {
+            const response = await productService.createProduct(productRequest, token);
+            if (response.status === 200 || response.status === 201) {
+                console.log('Producto creado:', response.data.data);
+                onClose();
+            }
+        } catch (error) {
+            console.error('Error creating product:', error);
+        }
+    }
+
+
+    const handleChangeName = (e) => setName(e.target.value);
+    const handleChangeDescription = (e) => setDescription(e.target.value);
+    const handleChangeImage = (e) => setImage(e.target.value);
+    const handleClose = () => onClose();
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, delay: 0 }}
+            className='layer'
+        >
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className='edit-product-card2'
+            >
+                    <FontAwesomeIcon
+                        icon={faClose}
+                        className='cancel-icon'
+                        onClick={handleClose}
+                    />
+                    <div className='edit-group'>
+                        <p className='edit-label'>Nombre:</p>
+                        <TextInputLight
+                            type='text'
+                            placeholder='Nombre'
+                            value={name}
+                            onChange={handleChangeName}
+                            className='price-input'
+                        />
+                    </div>
+                    <div className='edit-group'>
+                        <p className='edit-label'>Descripcion:</p>
+                        <TextInputLight
+                            type='text'
+                            placeholder='Descripcion'
+                            value={description}
+                            onChange={handleChangeDescription}
+                            className='price-input'
+                        />
+                    </div>
+                    <div className='edit-group'>
+                        <p className='edit-label'>Imagen:</p>
+                        <TextInputLight
+                            type='text'
+                            placeholder='Imagen'
+                            value={image}
+                            onChange={handleChangeImage}
+                            className='stock-input'
+                        />
+                    </div>
+                    <Button
+                        text='Guardar'
+                        alignment='center'
+                        onClick={handleCreateProduct}
+                        className='save-button'
+                    />
             </motion.div>
         </motion.div>
     );
@@ -448,5 +560,6 @@ export {
   CartItem,
   PaymentDetailsCard,
   EditProduct,
-  AddProduct,
+  AddProductStock,
+  AddProduct
 };
