@@ -97,7 +97,7 @@ function ShoppingCartView() {
     const handlePaymentRedirect = () => {
         if (acceptedTerms) {
             console.log('Redirigiendo al pago...');
-            navigate(`/client/stores/${currentStoreId}/shopping-cart/payment`)
+            navigate(`/client/stores/${currentStoreId}/shopping-cart/payment`, { state: { totalAmount } });
         }
     };
 

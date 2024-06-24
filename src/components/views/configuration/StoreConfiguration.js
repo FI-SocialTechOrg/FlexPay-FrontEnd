@@ -63,7 +63,6 @@ function StoreConfiguration() {
       });
      
       const singleCapitalizationOptions = [
-        { value: 'diaria', text: 'Diaria' },
         { value: 'mensual', text: 'Mensual' },
         { value: 'bimestral', text: 'Bimestral' },
       ];
@@ -397,7 +396,7 @@ function StoreConfiguration() {
                 transition={{ duration: 0.3, delay: 0 }}
                 >
                    <div className='inner-config-column'>
-                        <p className='label small'>Capitalización:</p>
+                        <p className='label small'>Plazo:</p>
                         <div className='inner-config-row'>
                             <DropDownDark
                                 options={singleCapitalizationOptions}
@@ -480,7 +479,7 @@ function StoreConfiguration() {
                     transition={{ duration: 0.3, delay: 0 }}
                     >
                         <div className='inner-config-column'>
-                            <p className='label small'>Capitalización:</p>
+                            <p className='label small'>Plazo:</p>
                             <div className='inner-config-row'>
                                 <DropDownDark
                                 options={singleCapitalizationOptions}
@@ -563,7 +562,7 @@ function StoreConfiguration() {
                     transition={{ duration: 0.3, delay: 0 }}
                     >
                         <div className='inner-config-column'>
-                            <p className='label small'>Capitalización:</p>
+                            <p className='label small'>Plazo:</p>
                             <div className='inner-config-row'>
                                 <DropDownDark
                                     options={singleCapitalizationOptions}
@@ -658,7 +657,7 @@ function StoreConfiguration() {
                             transition={{ duration: 0.3, delay: 0 }}
                             >
                             <div className='inner-config-column'>
-                                <p className='label small'>Capitalización:</p>
+                                <p className='label small'>Plazo:</p>
                                 <div className='inner-config-row'>
                                 <DropDownDark
                                     options={singleCapitalizationOptions}
@@ -740,7 +739,7 @@ function StoreConfiguration() {
                         transition={{ duration: 0.3, delay: 0 }}
                         >
                         <div className='inner-config-column'>
-                            <p className='label small'>Capitalización:</p>
+                            <p className='label small'>Plazo:</p>
                             <div className='inner-config-row'>
                             <DropDownDark
                                 options={singleCapitalizationOptions}
@@ -821,7 +820,7 @@ function StoreConfiguration() {
                         transition={{ duration: 0.3, delay: 0 }}
                         >
                         <div className='inner-config-column'>
-                            <p className='label small'>Capitalización:</p>
+                            <p className='label small'>Plazo:</p>
                             <div className='inner-config-row'>
                             <DropDownDark
                                 options={singleCapitalizationOptions}
