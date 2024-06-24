@@ -16,27 +16,28 @@ function ShoppingCartView() {
     const productStockService = new ProductStockService();
 
     useEffect(() => {
-        const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCart(storedCart);
-        if (storedCart.length > 0) {
-            getProducts(storedCart);
+        const storedCart = JSON.parse(localStorage.getItem('cart')) || {};
+        const storeCart = storedCart[currentStoreId] || [];
+        setCart(storeCart);
+        if (storeCart.length > 0) {
+            getProducts(storeCart);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [currentStoreId]);
 
-    const getProducts = async (cart) => {
+    const getProducts = async (storeCart) => {
         const storedUser = localStorage.getItem('user');
         const user = JSON.parse(storedUser);
         const token = user.token;
-        console.log('Cart:', cart);
+        console.log('Cart:', storeCart);
         const productsArray = [];
-        for (let i = 0; i < cart.length; i++) {
+        for (let i = 0; i < storeCart.length; i++) {
             try {
-                const productRes = await productStockService.getProductById(cart[i].id, token);
+                const productRes = await productStockService.getProductById(storeCart[i].id, token);
                 if (productRes.status === 200 || productRes.status === 201) {
                     productsArray.push({
                         ...productRes.data.data,
-                        quantity: cart[i].quantity // Use the quantity from the cart
+                        quantity: storeCart[i].quantity // Use the quantity from the cart
                     });
                 }
             } catch (error) {
@@ -73,11 +74,13 @@ function ShoppingCartView() {
 
     // Función auxiliar para actualizar el localStorage
     const updateLocalStorage = (products) => {
-        const cart = products.map(product => ({
+        const storeCart = products.map(product => ({
             id: product.id,
             quantity: product.quantity
         }));
-        localStorage.setItem('cart', JSON.stringify(cart));
+        const storedCart = JSON.parse(localStorage.getItem('cart')) || {};
+        storedCart[currentStoreId] = storeCart;
+        localStorage.setItem('cart', JSON.stringify(storedCart));
     };
 
     const handleRemove = (id) => {
@@ -86,7 +89,9 @@ function ShoppingCartView() {
 
         const updatedCart = cart.filter(product => product.id !== id);
         setCart(updatedCart);
-        localStorage.setItem('cart', JSON.stringify(updatedCart));
+        const storedCart = JSON.parse(localStorage.getItem('cart')) || {};
+        storedCart[currentStoreId] = updatedCart;
+        localStorage.setItem('cart', JSON.stringify(storedCart));
     };
 
     const handlePaymentRedirect = () => {
