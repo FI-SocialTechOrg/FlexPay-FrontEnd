@@ -99,7 +99,9 @@ function Register2({ role, id, token }) {
     }
 
     const createCreditConfiguration = async (storeConfigId) => {
-        const storeConfigReq = new CreditConfigurationRequest(0, 0, 0, 0, 0, 0, state.id);
+        console.log('tienda:', state.id)
+        const storeConfigReq = new CreditConfigurationRequest(0, 0, 0, 0, 0, 0, storeConfigId);
+        console.log('storeConfigReq', storeConfigReq)
         try{
             const storeConfigRes = await storeConfigurationService.createCreditConfiguration(state.token, storeConfigReq );
             if(storeConfigRes.status === 200 || storeConfigRes.status === 201) {
@@ -122,18 +124,20 @@ function Register2({ role, id, token }) {
         try {
             //Crear la tienda
             const storeRegister = await storeService.registerStore(storeReq, state.token);
-
+            
             if(storeRegister.status === 200 || storeRegister.status === 201) {
                 console.log('Tienda registrada correctamente');
-                createCreditConfiguration(storeRegister.data.data.id);
                 toast.success("Cuenta creada exitosamente", {
                     position: "top-center",
                     style: { background: '#FFFFFF', color: '#000000' }, 
                     autoClose: 1000,
                 });
                 setTimeout(() => {
+                    createCreditConfiguration(storeRegister.data.data.id);
+                }, 5000);
+                setTimeout(() => {
                     navigate('/auth/login');
-                }, 2000);
+                }, 6000);
             }
             else {
                 console.log('Error durante el registro');
@@ -143,8 +147,6 @@ function Register2({ role, id, token }) {
         } catch (error) {
             console.log('Error durante el registro:', error);
         }
-
-        navigate('/auth/login');
     }
 
     function renderFormFields() {

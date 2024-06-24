@@ -48,12 +48,14 @@ function LogIn({ setUser }) {
                     const token = logRes.data.data.token;
                     const accountRes = await accountService.getAccountById(id, token);
                     let boolCreditTerm = false;
+                    let creditTerm = 0;
 
                     if (accountRes.data.data.role.id === 1) {
                         const clientRes = await clientService.getclientByAccountId(id, token);
                         if(clientRes.status === 200 || clientRes.status === 201){
                             if (clientRes.data.data.creditTerm !== 0 && clientRes.data.data.creditTerm !== null) {
                                 boolCreditTerm = true;
+                                creditTerm = clientRes.data.data.creditTerm;
                             }
                         }
                     }
@@ -63,7 +65,7 @@ function LogIn({ setUser }) {
                         const role = account.role.id;
 
                         //Guardar data
-                        const userData = { isLoggedIn: true, id: id, token: token, account: account, role: role, isExistCreditTerms: boolCreditTerm};
+                        const userData = { isLoggedIn: true, id: id, token: token, account: account, role: role, isExistCreditTerms: boolCreditTerm, creditTerm: creditTerm};
                         localStorage.setItem('user', JSON.stringify(userData));
                         setUser(userData);
 

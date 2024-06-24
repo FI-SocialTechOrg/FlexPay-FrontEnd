@@ -6,6 +6,7 @@ import { Button, CustomLink, DropDownDark, TextInput, PaymentDetailsCard } from 
 import { useLocation } from 'react-router-dom';
 import './styles/Payment.css';
 import CreditConfigurationService from '../../../service/CreditConfigurationService';
+import { anualidadVcVlPteGT, anualidadVcVlPteGTEfectiva, nominalaEfectiva, valorFuturoTsEf, valorFuturoTsNl } from '../../../functions/functions';
 
 function PaymentView({ totalAmount }) {
     const location = useLocation();
@@ -26,6 +27,8 @@ function PaymentView({ totalAmount }) {
     const [includeGracePeriod, setIncludeGracePeriod] = useState(false); 
     const [isGraceTotal, setIsGraceTotal] = useState(false);
     const [showCard, setShowCard] = useState(false);
+    const [paymentDay, setPaymentDay] = useState('');
+    const [fee, setFee] = useState('');
     
     const [interestRate, setInterestRate] = useState({
         name: '', 
@@ -226,10 +229,92 @@ function PaymentView({ totalAmount }) {
         }
     };
     
+    function daysToNextPayment(diaDePago) {
+        const today = new Date();
+    
+        // Obtener el día actual y el mes actual
+        const currentDay = today.getDate();
+        const currentMonth = today.getMonth() + 1; 
+    
+        // Calcular el año y el próximo mes
+        let nextMonth = currentMonth + 1;
+        let nextYear = today.getFullYear();
+    
+        // Si el próximo mes es 13, hay que ajustarlo al siguiente año
+        if (nextMonth === 13) {
+            nextMonth = 1;
+            nextYear++;
+        }
+    
+        // Calcular la próxima fecha de pago
+        let nextPaymentDate;
+        if (diaDePago > currentDay) {
+            nextPaymentDate = new Date(nextYear, currentMonth - 1, diaDePago);
+        } else {
+            nextPaymentDate = new Date(nextYear, nextMonth - 1, diaDePago);
+        }
+    
+        // Calcular la diferencia en días entre la fecha actual y la próxima fecha de pago
+        const timeDifference = nextPaymentDate.getTime() - today.getTime();
+        const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+    
+        return daysDifference;
+    }
+
     const handleContinue = () => {
         console.log(singlePayOptions);
         console.log(installmentPayOptions);
         buildInterest();
+
+        let e_rate = interestRate.rate;
+        let present_value = financeAmount;
+        let period;
+
+        if(interestRate.period === 'Mensual'){
+            period = 30;
+        } else if(interestRate.period === 'Bimestral'){
+                period = 60;
+        }
+
+        const paymentDay = user.creditTerm;
+        let days = daysToNextPayment(parseInt(paymentDay));
+
+        if(selectedOption === '0'){
+            //Caso: Pago sin cuotas 
+            let future_value = 0;
+
+            if(interestRate.name === 'Tasa Efectiva'){
+                //Tasa efectiva
+                future_value = valorFuturoTsEf(present_value, period, e_rate, days);
+            }
+            else{ 
+                //Tasa nominal
+                future_value = valorFuturoTsNl(period, e_rate, period, days, present_value, days);
+            }
+                let interest = future_value - present_value;
+                setInterest(interest);
+                setTotalToPay(future_value);
+        } else { 
+             //Caso: Pago en cuotas 
+             //Tasa efectiva
+             let cuota
+
+             if(interestRate.name === 'Tasa Efectiva'){
+                cuota = anualidadVcVlPteGTEfectiva(e_rate, present_value, initialPayment, 30, parseInt(selectedOption), 30, 0);
+             }
+             else{
+                cuota = anualidadVcVlPteGT(period, e_rate, period, present_value, initialPayment, 30, parseInt(selectedOption), 30, 0);
+               
+             }
+
+             let total = cuota * parseInt(selectedOption);
+                setInterest(total - present_value);
+                setTotalToPay(total);
+                setFee(cuota);
+
+        }
+
+
 
 
         setShowCard(true);
@@ -239,6 +324,13 @@ function PaymentView({ totalAmount }) {
         setIncludeGracePeriod(!includeGracePeriod);
     };
     
+    useEffect(() => {       
+            const storedCreditTerm = localStorage.getItem('user.creditTerm');
+            if (storedCreditTerm) {
+                const paymentDayValue = parseInt(storedCreditTerm); // Convertir a número entero si es necesario
+                setPaymentDay(paymentDayValue);
+            }
+        }, []);
 
     return (
         <motion.div
