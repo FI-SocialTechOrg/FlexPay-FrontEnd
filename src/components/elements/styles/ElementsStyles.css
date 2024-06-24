@@ -519,6 +519,26 @@
   margin-top: 15px;
 }
 
+.add-product-button{
+  display: flex;
+  background-color: #53b64f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  align-items: center;
+}
+
+.add-product-section{
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+}
+
+
+
 @media screen and (max-width: 900px) {
   .payment-details-card{
     width: 60%;

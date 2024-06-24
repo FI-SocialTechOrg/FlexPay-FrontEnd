@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import './styles/Store.css';
-import {ProductEditCard, EditProduct, AddProduct} from '../../elements/Elements';
+import {ProductEditCard, EditProduct, AddProductStock} from '../../elements/Elements';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast } from 'react-toastify';
@@ -80,17 +80,17 @@ function OwnerStoreView() {
         }
     };
 
-    const handleCreateProduct = async (newProduct) => {
+    const handleCreateProduct = async (newProductStock) => {
         const storedUser = localStorage.getItem('user');
         const user = JSON.parse(storedUser);
         const token = user.token;
 
         const productStockRequest = new ProductStockRequest(
-            newProduct.price,
-            newProduct.mountStock,
-            newProduct.product,
-            newProduct.store,
-            newProduct.stateStock
+            newProductStock.price,
+            newProductStock.mountStock,
+            newProductStock.product,
+            newProductStock.store,
+            newProductStock.stateStock
         );
 
         console.log('Producto a crear:', productStockRequest);
@@ -166,7 +166,7 @@ function OwnerStoreView() {
         )}
 
         {isCreatingProduct && (
-          <AddProduct
+          <AddProductStock
               idStore={storeData.id}
               onSave={handleCreateProduct}
               onClose={handleClose}
